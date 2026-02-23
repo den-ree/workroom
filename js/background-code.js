@@ -55,13 +55,15 @@
     { fx: 0.82, fy: 0.84, shape: 5 },  // 13  $: n("0 4 7 2")
   ];
 
+  // Mobile: 3 left + 3 right edge columns.
+  // fx kept ≥ 0.08 on left so the orbit radius never pushes snippets off-screen.
   var HOMES_MOBILE = [
-    { fx: 0.01, fy: 0.18, shape: 0 },
-    { fx: 0.02, fy: 0.52, shape: 3 },
-    { fx: 0.015, fy: 0.82, shape: 4 },
+    { fx: 0.08, fy: 0.18, shape: 0 },
+    { fx: 0.08, fy: 0.52, shape: 3 },
+    { fx: 0.08, fy: 0.82, shape: 4 },
     { fx: 0.67, fy: 0.25, shape: 5 },
     { fx: 0.63, fy: 0.60, shape: 6 },
-    { fx: 0.54, fy: 0.88, shape: 1 },
+    { fx: 0.60, fy: 0.88, shape: 0 },
   ];
 
   // Position on a geometric path around (cx, cy).
@@ -88,9 +90,11 @@
 
   function init() {
     var isMobile = window.innerWidth < 768 || /Android|iPhone|iPad/i.test(navigator.userAgent);
-    var homes      = isMobile ? HOMES_MOBILE : HOMES;
-    var radiusMin  = isMobile ? 10 : CONFIG.RADIUS_MIN;
-    var radiusMax  = isMobile ? 22 : CONFIG.RADIUS_MAX;
+    var homes       = isMobile ? HOMES_MOBILE : HOMES;
+    var radiusMin   = isMobile ? 10 : CONFIG.RADIUS_MIN;
+    var radiusMax   = isMobile ? 22 : CONFIG.RADIUS_MAX;
+    var fontSizeMin = isMobile ? 7  : CONFIG.FONT_SIZE_MIN;
+    var fontSizeMax = isMobile ? 9  : CONFIG.FONT_SIZE_MAX;
 
     var canvas = document.createElement('canvas');
     canvas.id = 'code-bg';
@@ -110,8 +114,8 @@
     // One particle per home position, cycling through SNIPPETS
     var particles = [];
     for (var i = 0; i < homes.length; i++) {
-      var fontSize = Math.round(rnd(CONFIG.FONT_SIZE_MIN, CONFIG.FONT_SIZE_MAX));
-      var depthT   = (fontSize - CONFIG.FONT_SIZE_MIN) / (CONFIG.FONT_SIZE_MAX - CONFIG.FONT_SIZE_MIN);
+      var fontSize = Math.round(rnd(fontSizeMin, fontSizeMax));
+      var depthT   = (fontSize - fontSizeMin) / (fontSizeMax - fontSizeMin);
       particles.push({
         snippet:    SNIPPETS[i % SNIPPETS.length],
         fontSize:   fontSize,
