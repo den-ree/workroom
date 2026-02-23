@@ -55,7 +55,6 @@
     { fx: 0.82, fy: 0.84, shape: 5 },  // 13  $: n("0 4 7 2")
   ];
 
-  // Mobile: 3 left + 3 right, hugging the screen edges so they don't cover content
   var HOMES_MOBILE = [
     { fx: 0.01, fy: 0.18, shape: 0 },
     { fx: 0.02, fy: 0.52, shape: 3 },
