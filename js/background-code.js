@@ -55,15 +55,14 @@
     { fx: 0.82, fy: 0.84, shape: 5 },  // 13  $: n("0 4 7 2")
   ];
 
+  // Mobile: 3 left + 3 right, hugging the screen edges so they don't cover content
   var HOMES_MOBILE = [
-    { fx: 0.06, fy: 0.10, shape: 0 },
-    { fx: 0.65, fy: 0.08, shape: 4 },
-    { fx: 0.10, fy: 0.38, shape: 3 },
-    { fx: 0.62, fy: 0.40, shape: 5 },
-    { fx: 0.06, fy: 0.68, shape: 6 },
-    { fx: 0.58, fy: 0.70, shape: 0 },
-    { fx: 0.14, fy: 0.88, shape: 3 },
-    { fx: 0.64, fy: 0.86, shape: 4 },
+    { fx: 0.01, fy: 0.18, shape: 0 },
+    { fx: 0.02, fy: 0.52, shape: 3 },
+    { fx: 0.015, fy: 0.82, shape: 4 },
+    { fx: 0.67, fy: 0.25, shape: 5 },
+    { fx: 0.63, fy: 0.60, shape: 6 },
+    { fx: 0.54, fy: 0.88, shape: 1 },
   ];
 
   // Position on a geometric path around (cx, cy).
@@ -90,7 +89,9 @@
 
   function init() {
     var isMobile = window.innerWidth < 768 || /Android|iPhone|iPad/i.test(navigator.userAgent);
-    var homes = isMobile ? HOMES_MOBILE : HOMES;
+    var homes      = isMobile ? HOMES_MOBILE : HOMES;
+    var radiusMin  = isMobile ? 10 : CONFIG.RADIUS_MIN;
+    var radiusMax  = isMobile ? 22 : CONFIG.RADIUS_MAX;
 
     var canvas = document.createElement('canvas');
     canvas.id = 'code-bg';
@@ -120,7 +121,7 @@
         homeFx:     homes[i].fx,
         homeFy:     homes[i].fy,
         shape:      homes[i].shape,
-        radius:     rnd(CONFIG.RADIUS_MIN, CONFIG.RADIUS_MAX),
+        radius:     rnd(radiusMin, radiusMax),
         orbitTilt:  rnd(0, Math.PI),   // rotates the shape itself
         phase:      rnd(0, 2 * Math.PI),
         speed:      rnd(CONFIG.SPEED_MIN, CONFIG.SPEED_MAX) * (Math.random() > 0.5 ? 1 : -1),
