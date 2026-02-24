@@ -116,16 +116,22 @@
     for (var i = 0; i < homes.length; i++) {
       var fontSize = Math.round(rnd(fontSizeMin, fontSizeMax));
       var depthT   = (fontSize - fontSizeMin) / (fontSizeMax - fontSizeMin);
+      var baseOpacity = isMobile
+        ? rnd(0.15, 0.28)
+        : CONFIG.OPACITY_MIN + depthT * (CONFIG.OPACITY_MAX - CONFIG.OPACITY_MIN);
       particles.push({
         snippet:    SNIPPETS[i % SNIPPETS.length],
         fontSize:   fontSize,
-        opacity:    CONFIG.OPACITY_MIN + depthT * (CONFIG.OPACITY_MAX - CONFIG.OPACITY_MIN),
+        opacity:    baseOpacity,
+        pulseAmp:   rnd(0.04, 0.09),   // how much opacity breathes ±
+        pulsePhase: rnd(0, 2 * Math.PI),
+        pulseSpeed: rnd(0.004, 0.010), // slow independent pulse per snippet
         textTilt:   rnd(-10, 10),
         homeFx:     homes[i].fx,
         homeFy:     homes[i].fy,
         shape:      homes[i].shape,
         radius:     rnd(radiusMin, radiusMax),
-        orbitTilt:  rnd(0, Math.PI),   // rotates the shape itself
+        orbitTilt:  rnd(0, Math.PI),
         phase:      rnd(0, 2 * Math.PI),
         speed:      rnd(CONFIG.SPEED_MIN, CONFIG.SPEED_MAX) * (Math.random() > 0.5 ? 1 : -1),
         x: 0,
@@ -134,13 +140,14 @@
     }
 
     function drawParticle(p) {
-      var lines = p.snippet.split('\n');
-      var lineH = p.fontSize * CONFIG.LINE_HEIGHT;
+      var lines   = p.snippet.split('\n');
+      var lineH   = p.fontSize * CONFIG.LINE_HEIGHT;
+      var opacity = Math.max(0, p.opacity + Math.sin(p.pulsePhase) * p.pulseAmp);
       ctx.save();
       ctx.translate(p.x, p.y);
       ctx.rotate(p.textTilt * Math.PI / 180);
       ctx.font         = p.fontSize + 'px ' + CONFIG.FONT_FAMILY;
-      ctx.fillStyle    = 'rgba(' + CONFIG.COLOR + ', ' + p.opacity + ')';
+      ctx.fillStyle    = 'rgba(' + CONFIG.COLOR + ', ' + opacity + ')';
       ctx.textBaseline = 'top';
       for (var j = 0; j < lines.length; j++) ctx.fillText(lines[j], 0, j * lineH);
       ctx.restore();
@@ -161,6 +168,7 @@
         );
         p.x = pos.x;
         p.y = pos.y;
+        p.pulsePhase += p.pulseSpeed;
         drawParticle(p);
       }
       animFrameId = requestAnimationFrame(tick);
