@@ -330,23 +330,22 @@ code {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.75rem 2rem;
+    padding: calc(0.75rem - 1px) 2rem;
     font-size: 1rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: #fff;
     background: transparent;
-    border: 1px solid #fff;
+    border: 2px solid #fff;
     cursor: pointer;
-    transition: border-width 0.2s ease, border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+    transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
     white-space: nowrap;
 }
 
 .cta-button:hover {
     background: #1a1a1a;
     color: #fff;
-    border-width: 2px;
 }
 
 .cta-button--primary {
@@ -359,7 +358,6 @@ code {
 .cta-button--primary:focus {
     background: #3559B2;
     border-color: #3559B2;
-    border-width: 2px;
 }
 
 .cta-button--secondary {
@@ -371,7 +369,6 @@ code {
 .cta-button--secondary:focus {
     background: #1a1a1a;
     border-color: #1a1a1a;
-    border-width: 2px;
     color: #fff;
 }
 
