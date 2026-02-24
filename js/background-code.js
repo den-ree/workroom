@@ -91,8 +91,8 @@
   function init() {
     var isMobile = window.innerWidth < 768 || /Android|iPhone|iPad/i.test(navigator.userAgent);
     var homes       = isMobile ? HOMES_MOBILE : HOMES;
-    var radiusMin   = isMobile ? 10 : CONFIG.RADIUS_MIN;
-    var radiusMax   = isMobile ? 22 : CONFIG.RADIUS_MAX;
+    var radiusMin   = isMobile ? 28 : CONFIG.RADIUS_MIN;
+    var radiusMax   = isMobile ? 50 : CONFIG.RADIUS_MAX;
     var fontSizeMin = isMobile ? 7  : CONFIG.FONT_SIZE_MIN;
     var fontSizeMax = isMobile ? 9  : CONFIG.FONT_SIZE_MAX;
 
@@ -166,14 +166,22 @@
       animFrameId = requestAnimationFrame(tick);
     }
 
+    function ensureRunning() {
+      if (!animFrameId) animFrameId = requestAnimationFrame(tick);
+    }
+
+    // Pause when tab is hidden, restart on any return path.
+    // pageshow covers iOS Safari bfcache restores where visibilitychange may not fire.
     document.addEventListener('visibilitychange', function () {
       if (document.hidden) {
         cancelAnimationFrame(animFrameId);
         animFrameId = null;
-      } else if (!animFrameId) {
-        animFrameId = requestAnimationFrame(tick);
+      } else {
+        ensureRunning();
       }
     });
+    window.addEventListener('pageshow', ensureRunning);
+    window.addEventListener('focus',    ensureRunning);
 
     var resizeTimer = null;
     window.addEventListener('resize', function () {
