@@ -164,6 +164,10 @@ code {
     .container {
         padding: 0 1.5rem;
     }
+
+    .hero-image-grid {
+        gap: 0;
+    }
     
     .section {
         padding: 4rem 1.5rem;
@@ -1153,6 +1157,26 @@ main {
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         transform: translateX(-100%);
         transition: transform 0.3s ease;
+    }
+
+    .nav-menu::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(
+            to bottom,
+            transparent 0px,
+            transparent 3px,
+            rgba(0, 255, 70, 0.022) 3px,
+            rgba(0, 255, 70, 0.022) 4px
+        );
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .nav-menu .nav-item {
+        position: relative;
+        z-index: 1;
     }
     
     .nav-menu.active {
