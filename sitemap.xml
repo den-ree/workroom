@@ -1,40 +1,28 @@
----
-layout: null
----
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>{{ site.url }}</loc>
-    <lastmod>{{ site.time | date: "%Y-%m-%d" }}</lastmod>
+    <loc>https://denree.nl/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>{{ site.url }}/tech</loc>
+    <loc>https://denree.nl/tech</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>{{ site.url }}/music</loc>
+    <loc>https://denree.nl/music</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>{{ site.url }}/blog</loc>
+    <loc>https://denree.nl/journal</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>{{ site.url }}/contact</loc>
+    <loc>https://denree.nl/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
-  {% for post in site.posts %}
-  <url>
-    <loc>{{ site.url }}{{ post.url }}</loc>
-    <lastmod>{{ post.date | date: "%Y-%m-%d" }}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  {% endfor %}
 </urlset>

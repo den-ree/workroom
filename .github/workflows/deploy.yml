@@ -28,9 +28,9 @@ jobs:
       - name: Prepare site
         run: |
           mkdir -p _site
-          cp index.html blog.html contact.html music.html tech.html _site/
-          cp -r blog css js images fonts _site/
-          cp favicon.png robots.txt sitemap.xml _site/ 2>/dev/null || true
+          cp index.html _site/
+          cp -r contact music journal css js images fonts _site/
+          cp favicon.png favicon.ico robots.txt sitemap.xml _site/ 2>/dev/null || true
           [ -f CNAME ] && cp CNAME _site/ || true
 
       - name: Setup Pages

@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Scroll to hash on load (e.g. from /blog to /#apps), accounting for fixed header
+    // Scroll to hash on load (e.g. from /journal to /#apps), accounting for fixed header
     if (window.location.hash) {
         const target = document.querySelector(window.location.hash);
         if (target && header) {
@@ -167,6 +167,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Console message
-    console.log('%cDen Ree Studio', 'font-size: 20px; font-weight: bold; color: #4785F4;');
+    console.log('%cDen Ree Workroom', 'font-size: 20px; font-weight: bold; color: #4785F4;');
     console.log('%cBuild products that help you stay creative.', 'font-size: 14px; color: #888;');
 });

@@ -1,0 +1,24 @@
+# Den Ree
+
+Building apps that help you stay creative. Tech founder and musician exploring the creative potentials of code.
+
+## Summary
+
+Den Ree is a personal site for a tech founder and musician. It showcases apps (Content Office, Tapelet), music and live-coded performances, tech/development work, and a journal. Target audience: people interested in creative tech, app development, and code-driven music.
+
+## Main sections
+
+- [Home](https://denree.nl/): Apps, music preview, and intro
+- [Tech](https://denree.nl/tech): Mobile app development, sprint validation, MVP builds, iOS/Flutter/backend
+- [Music](https://denree.nl/music): Code-driven DJ sets, live-coded music, algorithmic composition
+- [Journal](https://denree.nl/journal): Thoughts on building products, creative coding, staying creative
+- [Contact](https://denree.nl/contact): Get in touch for app ideas, music projects, or general inquiry
+
+## Apps
+
+- Content Office: Instagram planner app for creators
+- Tapelet: Multi-channel audio recording app (Beta)
+
+## Contact
+
+- [Contact page](https://denree.nl/contact)

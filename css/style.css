@@ -385,8 +385,8 @@ code {
     display: flex;
     flex-direction: column;
     padding: 2rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: #0a0a0a;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.05);
     transition: all 0.3s ease;
 }
 
@@ -548,7 +548,7 @@ code {
     }
 }
 
-/* Blog row layout: meta left, content right */
+/* Journal row layout: meta left, content right */
 .card--blog-row {
     flex-direction: row;
     align-items: stretch;
@@ -592,7 +592,7 @@ code {
     width: 100%;
 }
 
-/* Hide sample posts; remove .blog-sample from cards or this rule to show */
+/* Hide sample posts; remove .blog-sample from cards or this rule to show (Journal) */
 .blog-sample {
     display: none !important;
 }
@@ -639,7 +639,7 @@ code {
     margin: 0 auto;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 12px;
+    border-radius: 0;
     padding: 1.5rem;
 }
 
@@ -651,7 +651,7 @@ code {
 
 .music-card__image {
     flex: 0 0 280px;
-    border-radius: 8px;
+    border-radius: 0;
     overflow: hidden;
 }
 
@@ -665,7 +665,7 @@ code {
 .music-card__embed {
     flex: 1;
     min-width: 0;
-    border-radius: 8px;
+    border-radius: 0;
     overflow: hidden;
 }
 

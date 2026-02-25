@@ -3,10 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Code-driven DJ sets and real-time music experiments. Live-coded music, algorithmic composition, interactive media.">
-    <title>Music - Den Ree Studio</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="icon" type="image/png" href="favicon.png">
+    <meta name="description" content="Get in touch to discuss your app idea, collaborate on music projects, or just say hello.">
+    <link rel="canonical" href="https://denree.nl/contact">
+    <meta property="og:title" content="Contact - Den Ree Workroom">
+    <meta property="og:description" content="Get in touch to discuss your app idea, collaborate on music projects, or just say hello.">
+    <meta property="og:url" content="https://denree.nl/contact">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://denree.nl/favicon.png">
+    <title>Contact - Den Ree Workroom</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon" type="image/png" href="/favicon.png">
 </head>
 <body>
     <!-- Header -->
@@ -23,9 +29,9 @@
                 
                 <ul class="nav-menu" id="navMenu">
                     <li class="nav-item"><a href="/#apps" class="nav-link">Apps</a></li>
-                    <li class="nav-item"><a href="/#music" class="nav-link active">Music</a></li>
-                    <li class="nav-item"><a href="/blog" class="nav-link">Blog</a></li>
-                    <li class="nav-item"><a href="/contact" class="nav-link">Contact</a></li>
+                    <li class="nav-item"><a href="/#music" class="nav-link">Music</a></li>
+                    <li class="nav-item"><a href="/journal" class="nav-link">Journal</a></li>
+                    <li class="nav-item"><a href="/contact" class="nav-link active">Contact</a></li>
                 </ul>
                 
                 <a href="/contact" class="cta-button header-cta">Start a project</a>
@@ -37,121 +43,86 @@
         <!-- Page Header -->
         <section class="page-header">
             <div class="container">
-                <h1 class="page-title">Music</h1>
-                <p class="page-subtitle">Creative Coder / Algo DJ</p>
+                <h1 class="page-title">Contact</h1>
+                <p class="page-subtitle">Let's Build Something Together</p>
             </div>
         </section>
 
-        <!-- Hero Statement -->
         <section class="section">
             <div class="container">
-                <div style="max-width: 800px; margin: 0 auto; text-align: center;">
-                    <p style="font-size: 1.2rem; margin-bottom: 2rem;">
-                        Code-driven DJ sets and real-time music experiments. Exploring the intersection of technology and sound through live coding, algorithmic composition, and interactive media systems.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Featured Performance -->
-        <section class="section">
-            <div class="container">
-                <h2 class="text-center mb-xl">Featured Performance</h2>
-                <div style="max-width: 900px; margin: 0 auto;">
-                    <div style="background: #0a0a0a; padding: 2rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; min-height: 500px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 1rem;">
-                        <p style="color: #666; font-size: 1.1rem;">Featured Performance Video Embed</p>
-                        <p style="color: rgba(255,255,255,0.5); font-size: 0.9rem;">YouTube or SoundCloud embed will go here</p>
-                        <p style="color: rgba(255,255,255,0.3); font-size: 0.85rem; margin-top: 1rem;">Placeholder: Replace with actual embed code</p>
+                <div style="max-width: 700px; margin: 0 auto;">
+                    <div style="text-align: center; margin-bottom: 3rem;">
+                        <p style="font-size: 1.2rem; margin-bottom: 1rem;">
+                            I'm open for:
+                        </p>
+                        <ul style="list-style: none; padding: 0; color: rgba(255,255,255,0.7);">
+                            <li style="margin-bottom: 0.5rem;">• Mobile app development projects</li>
+                            <li style="margin-bottom: 0.5rem;">• Music collaborations and bookings</li>
+                            <li style="margin-bottom: 0.5rem;">• Creative coding experiments</li>
+                        </ul>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Sets -->
-        <section class="section">
-            <div class="container">
-                <h2 class="text-center mb-xl">Sets</h2>
-                <div class="grid grid--3">
-                    <div class="card">
-                        <div style="background: #0a0a0a; height: 200px; display: flex; align-items: center; justify-content: center; color: #666; border-radius: 4px; margin-bottom: 1rem;">
-                            Set Embed
+                    
+                    <!-- Contact Form -->
+                    <form id="contactForm" class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+                        <div id="formSuccess" class="form-success" style="display: none;">
+                            Thanks! I'll get back to you soon.
                         </div>
-                        <h3 class="card-title">Machine Music</h3>
-                        <p class="card-description">A/V performance project developed in collaboration with Nikilia, combining live-coded music and real-time visuals.</p>
-                        <small>V2_ Live: "Mirage" - Rotterdam</small>
-                    </div>
-                    
-                    <div class="card">
-                        <div style="background: #0a0a0a; height: 200px; display: flex; align-items: center; justify-content: center; color: #666; border-radius: 4px; margin-bottom: 1rem;">
-                            Set Embed
+                        
+                        <div class="form-group">
+                            <label for="name" class="form-label">Name *</label>
+                            <input type="text" id="name" name="name" class="form-input" required>
                         </div>
-                        <h3 class="card-title">ITERATIONS 2025</h3>
-                        <p class="card-description">From Scratch Sessions performance in Den Haag.</p>
-                        <small>Den Haag</small>
-                    </div>
-                    
-                    <div class="card">
-                        <div style="background: #0a0a0a; height: 200px; display: flex; align-items: center; justify-content: center; color: #666; border-radius: 4px; margin-bottom: 1rem;">
-                            Set Embed
+                        
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email *</label>
+                            <input type="email" id="email" name="email" class="form-input" required>
                         </div>
-                        <h3 class="card-title">TOPLAP 48 Hours</h3>
-                        <p class="card-description">Stream From Scratch 2025 performance at RNDR Den Haag.</p>
-                        <small>RNDR Den Haag</small>
-                    </div>
-                </div>
-                
-                <div class="text-center mt-lg">
-                    <a href="https://soundcloud.com/den-ree" target="_blank" class="cta-button cta-button--secondary">Listen on SoundCloud</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Experiments -->
-        <section class="section">
-            <div class="container">
-                <h2 class="text-center mb-xl">Experiments</h2>
-                <div class="grid grid--3">
-                    <div class="card">
-                        <h3 class="card-title">Audio-Reactive Visuals</h3>
-                        <p class="card-description">Real-time visual generation driven by audio analysis and algorithmic patterns.</p>
+                        
+                        <div class="form-group">
+                            <label for="message" class="form-label">What you're building *</label>
+                            <textarea id="message" name="message" class="form-textarea" rows="6" required placeholder="Tell me about your idea, target users, and what success looks like..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="timeline" class="form-label">Timeline (optional)</label>
+                            <input type="text" id="timeline" name="timeline" class="form-input" placeholder="e.g., 2-3 months, ASAP, etc.">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="budget" class="form-label">Budget range (optional)</label>
+                            <input type="text" id="budget" name="budget" class="form-input" placeholder="e.g., $25K-$50K, flexible, etc.">
+                        </div>
+                        
+                        <input type="hidden" name="_subject" value="New contact form submission from denree.nl">
+                        <input type="hidden" name="_next" value="/contact?success=true">
+                        
+                        <button type="submit" class="cta-button cta-button--primary" style="width: 100%;">
+                            Send Message
+                        </button>
+                    </form>
+                    
+                    <!-- Helper Text -->
+                    <div style="margin-top: 3rem; padding: 1.5rem; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px;">
+                        <h4 style="margin-bottom: 1rem;">What to include:</h4>
+                        <ul style="list-style: none; padding: 0; color: rgba(255,255,255,0.7);">
+                            <li style="margin-bottom: 0.5rem;">• Your idea and what problem it solves</li>
+                            <li style="margin-bottom: 0.5rem;">• Target users and their needs</li>
+                            <li style="margin-bottom: 0.5rem;">• What success looks like for you</li>
+                            <li style="margin-bottom: 0.5rem;">• Links to references or similar products</li>
+                        </ul>
                     </div>
                     
-                    <div class="card">
-                        <h3 class="card-title">Interactive Prototypes</h3>
-                        <p class="card-description">Tools and systems for live performance, exploring new ways to create and manipulate sound.</p>
-                    </div>
-                    
-                    <div class="card">
-                        <h3 class="card-title">Live Coding Tools</h3>
-                        <p class="card-description">Custom tooling for algorithmic composition and real-time music generation.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Future Direction -->
-        <section class="section">
-            <div class="container">
-                <div style="max-width: 700px; margin: 0 auto; text-align: center; padding: 2rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px;">
-                    <h3 style="margin-bottom: 1rem;">Future Direction</h3>
-                    <p style="color: rgba(255,255,255,0.7);">
-                        Exploring interactive media projects that combine audio, visuals, and real-time systems. Building tools and performances that blur the line between code, music, and visual art.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Dual CTAs -->
-        <section class="section">
-            <div class="container">
-                <div style="max-width: 600px; margin: 0 auto;">
-                    <div class="grid grid--2" style="gap: 1.5rem;">
-                        <a href="/contact" class="cta-button cta-button--primary" style="text-align: center; padding: 1.5rem;">
-                            Collaborate / Book
-                        </a>
-                        <a href="/contact" class="cta-button cta-button--secondary" style="text-align: center; padding: 1.5rem;">
-                            Build an app with me
-                        </a>
+                    <!-- Alternative Contact -->
+                    <div style="margin-top: 3rem; text-align: center; padding-top: 3rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                        <p style="margin-bottom: 1rem; color: rgba(255,255,255,0.7);">Or reach out directly:</p>
+                        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                            <a href="mailto:contact@denree.nl" class="cta-button cta-button--secondary">
+                                Email me
+                            </a>
+                            <a href="#" class="cta-button cta-button--secondary">
+                                Book a call
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -169,7 +140,7 @@
                 <ul>
                     <li><a href="/#apps">Apps</a></li>
                     <li><a href="/#music">Music</a></li>
-                    <li><a href="/blog">Blog</a></li>
+                    <li><a href="/journal">Journal</a></li>
                     <li><a href="/contact">Contact</a></li>
                 </ul>
             </nav>
@@ -207,11 +178,20 @@
                 </a>
             </div>
             
-            <p class="footer-copyright">&copy; 2025 Den Ree. All rights reserved.</p>
+            <p class="footer-copyright">&copy; 2026 Den Ree. All rights reserved.</p>
         </div>
     </footer>
 
-    <script src="js/main.js"></script>
-    <script src="js/background-code.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/contact-form.js"></script>
+    <script src="/js/background-code.js"></script>
+    <script>
+    // Handle success parameter from Formspree redirect
+    if (window.location.search.includes('success=true')) {
+        document.getElementById('formSuccess').style.display = 'block';
+        document.getElementById('contactForm').style.display = 'none';
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+    </script>
 </body>
 </html>
