@@ -67,7 +67,7 @@ h1 {
 }
 
 h2 {
-    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-size: clamp(2rem, 5vw, 3rem);
     margin-bottom: 1.5rem;
 }
 
@@ -773,8 +773,8 @@ code {
 }
 
 .hero-title {
-    margin-bottom: 2rem;
-    font-size: clamp(3rem, 8vw, 6.5rem);
+    margin-bottom: 0.5rem;
+    font-size: clamp(3.5rem, 5vw, 4rem);
 }
 
 .hero-subtitle {
