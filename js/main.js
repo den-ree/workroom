@@ -1,5 +1,15 @@
 // Main JavaScript
 
+// Load shared footer partial
+(function () {
+    var el = document.getElementById('site-footer');
+    if (el) {
+        fetch('/partials/footer.html')
+            .then(function (r) { return r.text(); })
+            .then(function (html) { el.innerHTML = html; });
+    }
+})();
+
 document.addEventListener('DOMContentLoaded', function() {
     // Mobile Menu Toggle
     const mobileMenuToggle = document.getElementById('mobileMenuToggle');
