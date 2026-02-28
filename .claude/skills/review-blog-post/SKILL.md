@@ -9,35 +9,116 @@ When you add new pages or blog posts to this site, keep discoverability in sync.
 
 ## Checklist
 
-1. **sitemap.xml**  
+1. **sitemap.xml**
    Add a `<url>` entry for the new page:
    - `<loc>https://denree.nl/</loc>` (trailing slash for homepage)
-   - Use `https://denree.nl/path` (no trailing slash) for other pages, e.g. `/blog`, `/blog/my-post`.
-   - Set `<changefreq>` (e.g. `weekly` for blog, `monthly` for static).
-   - Set `<priority>` (e.g. 0.6–0.8 for posts, 1.0 for homepage).
+   - Use `https://denree.nl/path` (no trailing slash) for other pages, e.g. `/journal`, `/journal/my-note`.
+   - Set `<changefreq>` (e.g. `weekly` for journal notes, `monthly` for static).
+   - Set `<priority>` (e.g. 0.6–0.8 for notes, 1.0 for homepage).
 
-2. **llms.txt**  
+2. **llms.txt**
    Keep the AI-readable overview up to date:
    - If adding a new main section: add a bullet and link under "Main sections".
-   - If adding notable content (e.g. a key blog series or project): add a short line and link in the relevant section or a new subsection.
+   - If adding notable content (e.g. a key journal note or project): add a short line and link in the relevant section or a new subsection.
    - Use absolute URLs: `https://denree.nl/...`.
 
-## Example (new blog post)
+3. **journal/index.html** — add a card to `#journalGrid`
+   Each note needs a card entry. Copy this structure:
+
+   ```html
+   <div class="card card--blog-row" data-thread="THREAD_KEY" data-status="STATUS">
+       <div class="card-meta">
+           <small class="card-date">Month DD, YYYY</small>
+           <small class="card-date">City</small>
+       </div>
+       <div class="card-body">
+           <span class="card-status card-status--STATUS">SYMBOL STATUS</span>
+           <h3 class="card-title">
+               <a href="/journal/note-slug">Note Title</a>
+           </h3>
+           <div class="card-badges">
+               <span class="badge badge--thread badge--THREAD_KEY">THREAD LABEL</span>
+               <span class="badge">context-tag</span>
+           </div>
+       </div>
+   </div>
+   ```
+
+   **Thread keys and badge classes:**
+   | Thread label | `data-thread` | badge class | color |
+   |---|---|---|---|
+   | livecoding music | `livecoding` | `badge--livecoding` | `#52D0FA` light blue |
+   | working with AI | `ai` | `badge--ai` | `#2073FF` dark blue |
+   | new media art | `newmedia` | `badge--newmedia` | `#FF82D2` pink |
+
+   **Status values:**
+   | Status | `data-status` | `card-status` class | symbol |
+   |---|---|---|---|
+   | Live | `live` | `card-status--live` | `●` |
+   | Upcoming | `upcoming` | `card-status--upcoming` | `◌` |
+   | Finished | `finished` | `card-status--finished` | (hidden) |
+
+   Note: Live = happening now / actively updating. Upcoming cards have their title muted and link disabled automatically via CSS.
+
+4. **Note page** — use `journal/_template.html` as the starting point
+   - Copy `_template.html` to `journal/note-slug/index.html`
+   - Fill in the metadata comment block at the top
+   - Update `<head>` meta tags (title, description, canonical, og:*)
+   - Location icon is already in the template — just replace the city name
+   - Default location is Rotterdam
+
+## Note metadata comment block
+
+Each note file starts with:
+
+```html
+<!--
+  title: Note Title
+  date: YYYY-MM-DD
+  location: City
+  thread: livecoding music         (one of: working with AI / livecoding music / new media art)
+  thread-key: livecoding           (one of: ai / livecoding / newmedia)
+  status: live                     (one of: live / upcoming / finished)
+  tags: performance, residency     (optional, comma-separated)
+-->
+```
+
+## Example (new note)
 
 **sitemap.xml** — add inside `<urlset>`:
 
 ```xml
   <url>
-    <loc>https://denree.nl/blog/my-new-post</loc>
+    <loc>https://denree.nl/journal/finding-algoraves</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
 ```
 
-**llms.txt** — if the post is important for how the site should be described, add under a suitable section, e.g.:
+**llms.txt** — if the note is notable, add under Journal:
 
 ```markdown
-- [My new post](https://denree.nl/blog/my-new-post): Short description
+- [Finding Algoraves](https://denree.nl/journal/finding-algoraves): On discovering the algorave scene and what changes when the music is written live on stage.
 ```
 
-Otherwise, ensuring the blog index link and summary are accurate is enough.
+**journal/index.html** card example:
+
+```html
+<div class="card card--blog-row" data-thread="livecoding" data-status="live">
+    <div class="card-meta">
+        <small class="card-date">January 18, 2026</small>
+        <small class="card-date">Amsterdam</small>
+    </div>
+    <div class="card-body">
+        <span class="card-status card-status--live">● live</span>
+        <h3 class="card-title">
+            <a href="/journal/finding-algoraves">Finding Algoraves</a>
+        </h3>
+        <div class="card-badges">
+            <span class="badge badge--thread badge--livecoding">livecoding music</span>
+            <span class="badge">performance</span>
+            <span class="badge">algorave</span>
+        </div>
+    </div>
+</div>
+```
