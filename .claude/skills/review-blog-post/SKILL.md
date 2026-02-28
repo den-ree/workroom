@@ -28,7 +28,7 @@ When you add new pages or blog posts to this site, keep discoverability in sync.
    ```html
    <div class="card card--blog-row" data-thread="THREAD_KEY" data-status="STATUS">
        <div class="card-meta">
-           <small class="card-date">Month DD, YYYY</small>
+           <small class="card-date">Mon DD, YYYY</small>
            <small class="card-date">City</small>
        </div>
        <div class="card-body">
@@ -64,6 +64,7 @@ When you add new pages or blog posts to this site, keep discoverability in sync.
    - Copy `_template.html` to `journal/note-slug/index.html`
    - Fill in the metadata comment block at the top
    - Update `<head>` meta tags (title, description, canonical, og:*)
+   - **Date format:** Mon DD, YYYY (e.g. Feb 28, 2026) — abbreviated month
    - Location icon is already in the template — just replace the city name
    - Default location is Rotterdam
 
@@ -106,7 +107,7 @@ Each note file starts with:
 ```html
 <div class="card card--blog-row" data-thread="livecoding" data-status="live">
     <div class="card-meta">
-        <small class="card-date">January 18, 2026</small>
+        <small class="card-date">Jan 18, 2026</small>
         <small class="card-date">Amsterdam</small>
     </div>
     <div class="card-body">

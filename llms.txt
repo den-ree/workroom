@@ -14,6 +14,10 @@ Den Ree is a personal site for a tech founder and musician. It showcases his own
 - [Journal](https://denree.nl/journal): Thoughts on building products, creative coding, staying creative
 - [Contact](https://denree.nl/contact): Get in touch for app ideas, music projects, or general inquiry
 
+## Journal
+
+- [Wearing the Suit](https://denree.nl/journal/wearing-the-suit): Building with blanche vs getting blanche to build for you — wear the mechanic's suit, not the Iron Legion.
+
 ## Apps
 
 - Content Office: Instagram planner app for creators
