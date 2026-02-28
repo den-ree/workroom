@@ -1243,6 +1243,65 @@ code {
     font-style: italic;
 }
 
+/* Preview link tooltip (compact hover card) */
+.preview-tooltip {
+    position: fixed;
+    z-index: 1000;
+    max-width: 200px;
+    padding: 8px 10px;
+    background: #1a1a1a;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 6px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    pointer-events: auto;
+}
+
+.preview-tooltip__inner {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.preview-tooltip__img {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    border-radius: 4px;
+    object-fit: cover;
+    background: #0a0a0a;
+}
+
+.preview-tooltip__text {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.preview-tooltip__title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+}
+
+.preview-tooltip__desc {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.65);
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+@media (hover: none) {
+    .preview-tooltip {
+        display: none !important;
+    }
+}
+
 .note-back {
     display: inline-block;
     margin-bottom: 2rem;

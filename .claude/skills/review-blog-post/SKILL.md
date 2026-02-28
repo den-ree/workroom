@@ -68,6 +68,18 @@ When you add new pages or blog posts to this site, keep discoverability in sync.
    - Location icon is already in the template — just replace the city name
    - Default location is Rotterdam
 
+5. **First mention of “blanche”** — use a preview link
+   In the note body, the **first** occurrence of the word “blanche” in the article should be a preview link to the [Why blanche?](/journal/why-blanche) post. Wrap only that first “blanche” in:
+
+   ```html
+   <a href="/journal/why-blanche" class="preview-link"
+      data-preview-title="Why blanche?"
+      data-preview-desc="I call AI blanche, inspired by R.Williams"
+      data-preview-image="/assets/why_blanche.jpeg">blanche</a>
+   ```
+
+   Later mentions of “blanche” in the same post stay plain text (no link). The preview-link script shows a compact hover tooltip; the page already includes `preview-link.js` when using the journal template.
+
 ## Note metadata comment block
 
 Each note file starts with:
