@@ -23,17 +23,17 @@
   ];
 
   var CONFIG = {
-    FONT_SIZE_MIN: 10,
-    FONT_SIZE_MAX: 13,
-    OPACITY_MIN: 0.09,
-    OPACITY_MAX: 0.18,
+    FONT_SIZE_MIN: 6,
+    FONT_SIZE_MAX: 10,
+    OPACITY_MIN: 0.07,
+    OPACITY_MAX: 0.13,
     FONT_FAMILY: "'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace",
     COLOR: '255, 255, 255',
     LINE_HEIGHT: 1.45,
-    RADIUS_MIN: 24,   // px — orbit radius around home (kept small)
-    RADIUS_MAX: 64,
-    SPEED_MIN: 0.0006,
-    SPEED_MAX: 0.001,
+    RADIUS_MIN: 6,    // px — orbit radius around home (kept tiny)
+    RADIUS_MAX: 18,
+    SPEED_MIN: 0.0002,
+    SPEED_MAX: 0.0004,
   };
 
   // One fixed home per snippet — distributed across the full viewport.
@@ -91,10 +91,10 @@
   function init() {
     var isMobile = window.innerWidth < 768 || /Android|iPhone|iPad/i.test(navigator.userAgent);
     var homes       = isMobile ? HOMES_MOBILE : HOMES;
-    var radiusMin   = isMobile ? 28 : CONFIG.RADIUS_MIN;
-    var radiusMax   = isMobile ? 50 : CONFIG.RADIUS_MAX;
-    var fontSizeMin = isMobile ? 7  : CONFIG.FONT_SIZE_MIN;
-    var fontSizeMax = isMobile ? 9  : CONFIG.FONT_SIZE_MAX;
+    var radiusMin   = isMobile ? 8  : CONFIG.RADIUS_MIN;
+    var radiusMax   = isMobile ? 16 : CONFIG.RADIUS_MAX;
+    var fontSizeMin = isMobile ? 6  : CONFIG.FONT_SIZE_MIN;
+    var fontSizeMax = isMobile ? 8  : CONFIG.FONT_SIZE_MAX;
 
     var canvas = document.createElement('canvas');
     canvas.id = 'code-bg';
@@ -117,15 +117,15 @@
       var fontSize = Math.round(rnd(fontSizeMin, fontSizeMax));
       var depthT   = (fontSize - fontSizeMin) / (fontSizeMax - fontSizeMin);
       var baseOpacity = isMobile
-        ? rnd(0.15, 0.28)
+        ? rnd(0.10, 0.18)
         : CONFIG.OPACITY_MIN + depthT * (CONFIG.OPACITY_MAX - CONFIG.OPACITY_MIN);
       particles.push({
         snippet:    SNIPPETS[i % SNIPPETS.length],
         fontSize:   fontSize,
         opacity:    baseOpacity,
-        pulseAmp:   rnd(0.04, 0.09),   // how much opacity breathes ±
+        pulseAmp:   rnd(0.02, 0.04),   // how much opacity breathes ±
         pulsePhase: rnd(0, 2 * Math.PI),
-        pulseSpeed: rnd(0.004, 0.010), // slow independent pulse per snippet
+        pulseSpeed: rnd(0.001, 0.002), // slow independent pulse per snippet
         textTilt:   rnd(-10, 10),
         homeFx:     homes[i].fx,
         homeFy:     homes[i].fy,
