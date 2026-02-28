@@ -219,7 +219,7 @@ code {
     left: 0;
     right: 0;
     z-index: 1000;
-    background: rgba(0, 0, 0, 0.35);
+    background: rgba(0, 0, 0, 0.85);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -1014,6 +1014,248 @@ code {
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 20px;
     color: rgba(255, 255, 255, 0.7);
+}
+
+/* Thread badges */
+.badge--thread {
+    font-weight: 600;
+}
+
+.badge--ai {
+    background: rgba(32, 115, 255, 0.12);
+    border-color: #2073FF;
+    color: #2073FF;
+}
+
+.badge--livecoding {
+    background: rgba(82, 208, 250, 0.12);
+    border-color: #52D0FA;
+    color: #52D0FA;
+}
+
+.badge--newmedia {
+    background: rgba(255, 130, 210, 0.12);
+    border-color: #FF82D2;
+    color: #FF82D2;
+}
+
+/* Status indicator */
+.card-status {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+}
+
+.card-status--live { color: #5CCC6A; }
+.card-status--upcoming { color: rgba(255, 255, 255, 0.3); }
+.card-status--finished { display: none; }
+
+/* Upcoming card — muted */
+.card--blog-row[data-status="upcoming"] .card-title a,
+.card--blog-row[data-status="upcoming"] .card-title {
+    color: rgba(255, 255, 255, 0.3);
+    pointer-events: none;
+}
+
+/* Journal filter bar */
+.journal-filters {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+
+.journal-filter-btn {
+    padding: 0.35rem 1rem;
+    font-size: 0.8rem;
+    font-family: inherit;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    color: rgba(255, 255, 255, 0.45);
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.journal-filter-btn:hover {
+    border-color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.journal-filter-btn.active {
+    border-color: #fff;
+    color: #fff;
+}
+
+.journal-filter-btn[data-thread="ai"].active {
+    border-color: #4785F4;
+    color: #4785F4;
+}
+
+.journal-filter-btn[data-thread="livecoding"].active {
+    border-color: #F4C547;
+    color: #F4C547;
+}
+
+.journal-filter-btn[data-thread="newmedia"].active {
+    border-color: #C547F4;
+    color: #C547F4;
+}
+
+.card--blog-row.is-hidden {
+    display: none;
+}
+
+/* Active tag filter chip */
+.journal-active-filter {
+    min-height: 2rem;
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.journal-tag-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0.9rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    border: 1px solid currentColor;
+    transition: opacity 0.2s ease;
+}
+
+.journal-tag-chip:hover {
+    opacity: 0.7;
+}
+
+.journal-tag-chip__remove {
+    opacity: 0.55;
+    font-size: 1rem;
+    line-height: 1;
+}
+
+/* Badges inside card-body */
+.card--blog-row .card-body .card-badges {
+    margin-top: 0.75rem;
+}
+
+/* Note page */
+.note-header {
+    padding: 4rem 0 2rem;
+}
+
+.note-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+}
+
+.note-meta__location {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.note-status {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.note-status--live { color: #5CCC6A; }
+.note-status--upcoming { color: rgba(255, 255, 255, 0.3); }
+.note-status--finished { display: none; }
+
+.note-title {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    margin-bottom: 2rem;
+}
+
+.note-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.note-body {
+    max-width: 680px;
+    padding: 3rem 0 6rem;
+}
+
+.note-body p {
+    font-size: 1.1rem;
+    line-height: 1.75;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 1.5rem;
+}
+
+.note-body h2 {
+    font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+}
+
+.note-body h3 {
+    font-size: clamp(1.1rem, 2vw, 1.4rem);
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+}
+
+.note-body a {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.note-body blockquote {
+    border-left: 2px solid rgba(255, 255, 255, 0.2);
+    padding-left: 1.5rem;
+    margin: 2rem 0;
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+}
+
+.note-body figure {
+    margin: 2rem 0;
+}
+
+.note-body figure img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 4px;
+}
+
+.note-body figure figcaption {
+    margin-top: 0.75rem;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-style: italic;
+}
+
+.note-back {
+    display: inline-block;
+    margin-bottom: 2rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4);
+    transition: color 0.2s ease;
+}
+
+.note-back:hover {
+    color: #fff;
+    opacity: 1;
 }
 
 /* Footer */

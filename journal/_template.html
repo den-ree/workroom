@@ -1,15 +1,24 @@
+<!--
+  title: Note Title Here
+  date: YYYY-MM-DD
+  location: City
+  thread: livecoding music         (one of: working with AI / livecoding music / new media art)
+  thread-key: livecoding           (one of: ai / livecoding / newmedia — used for data-thread and badge CSS)
+  status: live                     (one of: live / upcoming / finished)
+  tags: performance, residency     (optional, comma-separated)
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Journal: building products, creative coding, music, AI, and staying creative.">
-    <link rel="canonical" href="https://denree.nl/journal">
-    <meta property="og:title" content="Journal - Den Ree Workroom">
-    <meta property="og:description" content="Journal: building products, creative coding, music, AI, and staying creative.">
-    <meta property="og:url" content="https://denree.nl/journal">
-    <meta property="og:type" content="website">
-    <title>Journal - Den Ree Workroom</title>
+    <meta name="description" content="One sentence description for SEO and social sharing.">
+    <link rel="canonical" href="https://denree.nl/journal/note-slug">
+    <meta property="og:title" content="Note Title Here - Den Ree">
+    <meta property="og:description" content="One sentence description for SEO and social sharing.">
+    <meta property="og:url" content="https://denree.nl/journal/note-slug">
+    <meta property="og:type" content="article">
+    <title>Note Title Here - Den Ree</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
     <link rel="icon" type="image/png" href="/assets/favicon.png">
@@ -39,38 +48,52 @@
     </header>
 
     <main>
-        <!-- Page Header -->
-        <section class="page-header">
+        <section class="note-header">
             <div class="container">
-                <h1 class="page-title">Journal</h1>
-                <p class="page-subtitle">Notes about making music with livecoding, building apps, experimenting with AI.</p>
+                <a href="/journal" class="note-back">← Journal</a>
+
+                <div class="note-meta">
+                    <span class="note-meta__date">Month DD, YYYY</span>
+                    <span class="note-meta__location">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        Rotterdam
+                    </span>
+                    <span class="note-status note-status--live">● live</span>
+                    <!-- Status options:
+                        <span class="note-status note-status--live">● live</span>
+                        <span class="note-status note-status--upcoming">◌ upcoming</span>
+                        <span class="note-status note-status--finished">finished</span>
+                    -->
+                </div>
+
+                <h1 class="note-title">Note Title Here</h1>
+
+                <div class="note-tags" id="noteTags">
+                    <span class="badge badge--thread badge--livecoding">livecoding music</span>
+                    <!-- Thread badge options:
+                        <span class="badge badge--thread badge--ai">working with AI</span>
+                        <span class="badge badge--thread badge--livecoding">livecoding music</span>
+                        <span class="badge badge--thread badge--newmedia">new media art</span>
+                    -->
+                    <span class="badge">context-tag</span>
+                    <!-- Optional context tags: tapelet / machine music / residency / performance / tools / collaboration -->
+                </div>
             </div>
         </section>
 
-        <section class="section">
+        <section>
             <div class="container">
+                <div class="note-body">
 
-                <!-- Active filter display — populated by JS when a tag is tapped -->
-                <div class="journal-active-filter" id="journalActiveFilter"></div>
+                    <p>Opening paragraph. This is what shows as the lede on the index card if used.</p>
 
-                <!-- Notes -->
-                <div class="grid grid--rows" id="journalGrid">
+                    <p>Continue writing here.</p>
 
-                    <div class="card card--blog-row" data-thread="ai" data-status="finished">
-                        <div class="card-meta">
-                            <small class="card-date">September 11, 2025</small>
-                            <small class="card-date">Amsterdam</small>
-                        </div>
-                        <div class="card-body">
-                            <span class="card-status card-status--finished">finished</span>
-                            <h3 class="card-title">
-                                <a href="/journal/why-blanche">Why blanche?</a>
-                            </h3>
-                            <div class="card-badges">
-                                <span class="badge badge--thread badge--ai">working with AI</span>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Example elements: -->
+
+                    <!-- <h2>Section heading</h2> -->
+
+                    <!-- <blockquote>A quote or fragment.</blockquote> -->
 
                 </div>
             </div>
@@ -96,7 +119,7 @@
                     </svg>
                 </a>
                 <a href="https://soundcloud.com/den-ree" target="_blank" rel="noopener noreferrer" aria-label="Soundcloud">
-                    <img src="../assets/soundcloud-logo.png" alt="SoundCloud" width="24" height="24">
+                    <img src="/assets/soundcloud-logo.png" alt="SoundCloud" width="24" height="24">
                 </a>
                 <a href="https://github.com/denree" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
                     <svg viewBox="0 0 24 24" width="24" height="24">
@@ -121,56 +144,5 @@
 
     <script src="/js/main.js"></script>
     <script src="/js/background-code.js"></script>
-    <script>
-        const cards = document.querySelectorAll('#journalGrid .card--blog-row');
-        const activeFilterEl = document.getElementById('journalActiveFilter');
-        let activeTag = null;
-
-        function applyFilter(tag) {
-            cards.forEach(card => {
-                if (!tag) {
-                    card.classList.remove('is-hidden');
-                    return;
-                }
-                const match = Array.from(card.querySelectorAll('.badge'))
-                    .some(b => b.textContent.trim() === tag);
-                card.classList.toggle('is-hidden', !match);
-            });
-        }
-
-        function showChip(label, badgeClass) {
-            activeFilterEl.innerHTML =
-                `<span class="journal-tag-chip ${badgeClass}" id="activeTagChip">
-                    ${label} <span class="journal-tag-chip__remove">×</span>
-                </span>`;
-            document.getElementById('activeTagChip').addEventListener('click', clearFilter);
-        }
-
-        function clearFilter() {
-            activeTag = null;
-            activeFilterEl.innerHTML = '';
-            applyFilter(null);
-        }
-
-        document.querySelectorAll('#journalGrid .badge').forEach(badge => {
-            badge.style.cursor = 'pointer';
-            badge.addEventListener('click', e => {
-                e.stopPropagation();
-                const label = badge.textContent.trim();
-
-                if (activeTag === label) {
-                    clearFilter();
-                    return;
-                }
-
-                activeTag = label;
-
-                // Carry badge classes to chip so thread colors apply
-                const chipClass = badge.className.replace('badge', '').trim();
-                showChip(label, 'badge ' + chipClass);
-                applyFilter(label);
-            });
-        });
-    </script>
 </body>
 </html>
