@@ -1,6 +1,6 @@
 # Den Ree
 
-Exploring the creative potentials of code.
+coder exploring the creative potentials of code.
 
 ## Summary
 
