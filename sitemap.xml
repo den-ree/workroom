@@ -21,6 +21,11 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://denree.nl/journal/finding-algoraves</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://denree.nl/journal/wearing-the-suit</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

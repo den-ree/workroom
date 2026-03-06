@@ -16,6 +16,7 @@ Den Ree is a personal site for a tech founder and musician. It showcases his own
 
 ## Journal
 
+- [Finding Algoraves](https://denree.nl/journal/finding-algoraves): On discovering the algorave scene and what changes when music and visuals are performed live with code.
 - [Wearing the Suit](https://denree.nl/journal/wearing-the-suit): Building with blanche vs getting blanche to build for you — wear the mechanic's suit, not the Iron Legion.
 
 ## Apps
