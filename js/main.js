@@ -6,7 +6,7 @@
     if (!el) return;
     el.innerHTML = [
         '<div class="footer-container">',
-        '    <div class="footer-bio"><p>coder exploring the creative potentials of code.</p></div>',
+        '    <div class="footer-bio"><p>Exploring the creative potentials of code.</p></div>',
         '    <nav class="footer-nav"><ul>',
         '        <li><a href="/#apps">Apps</a></li>',
         '        <li><a href="/#music">Music</a></li>',
