@@ -249,7 +249,7 @@ code {
 .navbar {
     position: relative;
     z-index: 1;  /* sits above the ::after scanlines layer */
-    padding: 1.5rem 3rem;
+    padding: 0.875rem 3rem;
 }
 
 .navbar-container {
@@ -262,7 +262,7 @@ code {
 }
 
 .logo {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     font-weight: 700;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -378,6 +378,8 @@ code {
 
 .header-cta {
     display: inline-flex;
+    padding: calc(0.5rem - 1px) 1.25rem;
+    font-size: 0.8rem;
 }
 
 /* Cards */
@@ -1425,7 +1427,7 @@ main {
 /* Responsive Design */
 @media (max-width: 1024px) {
     .navbar {
-        padding: 1.5rem 2rem;
+        padding: 0.875rem 2rem;
     }
     
     .navbar-container {
@@ -1435,7 +1437,7 @@ main {
 
 @media (max-width: 768px) {
     .navbar {
-        padding: 1rem 1.5rem;
+        padding: 0.75rem 1.5rem;
     }
     
     .navbar-container {
