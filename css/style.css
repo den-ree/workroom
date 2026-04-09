@@ -129,6 +129,16 @@ code {
     margin-bottom: 3rem;
 }
 
+/* Home: spacing after hero (no section h2) */
+.section--home-block {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+}
+
+.section--home-block .grid {
+    gap: 3.5rem;
+}
+
 .mt-lg {
     margin-top: 2rem;
 }
@@ -165,12 +175,18 @@ code {
         padding: 0 1.5rem;
     }
 
-    .hero-image-grid {
-        gap: 0;
-    }
     
     .section {
         padding: 4rem 1.5rem;
+    }
+
+    .section--home-block {
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+    }
+
+    .section--home-block .grid {
+        gap: 2.5rem;
     }
     
     .grid--2,
@@ -187,7 +203,7 @@ code {
         overflow-y: visible;
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
-        gap: 1.25rem;
+        gap: 1.75rem;
         padding-bottom: 1rem;
         margin: 0 -1.5rem;
         padding-left: 1.5rem;
@@ -195,7 +211,7 @@ code {
     }
 
     #apps .grid--2 .card {
-        flex: 0 0 82vw;
+        flex: 0 0 min(420px, 88vw);
         scroll-snap-align: start;
     }
     
@@ -441,9 +457,20 @@ code {
     object-position: center center;
 }
 
+#apps .card--featured {
+    padding: 2.5rem;
+    text-align: center;
+    align-items: center;
+}
+
 #apps .card--featured .card-image {
     background-color: #F6F6F6;
-    width: calc(100% + 4rem);
+    margin: -2.5rem -2.5rem 1.75rem -2.5rem;
+    width: calc(100% + 5rem);
+}
+
+#apps .card--featured .cta-button {
+    align-self: center;
 }
 
 .card--featured:hover .card-image img {
@@ -637,18 +664,18 @@ code {
 }
 
 .music-card {
-    max-width: 800px;
+    max-width: 880px;
     margin: 0 auto;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 0;
-    padding: 1.5rem;
+    padding: 2rem 2.25rem;
 }
 
 .music-card__top {
     display: flex;
     align-items: flex-start;
-    gap: 1.5rem;
+    gap: 2rem;
 }
 
 .music-card__image {
@@ -682,6 +709,7 @@ code {
 .music-card__title {
     font-size: 1.25rem;
     margin-bottom: 0.5rem;
+    text-align: center;
 }
 
 .music-card__text {
@@ -709,14 +737,15 @@ code {
 
 /* Hero Section */
 .hero {
-    min-height: 100vh;
+    --hero-black-tail: clamp(3.25rem, 7vw, 5.5rem);
     display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
     align-items: center;
-    justify-content: center;
-    padding: 8rem 3rem 6rem;
+    min-height: clamp(340px, 58vh, 680px);
+    padding: calc(80px + 2rem) 3rem var(--hero-black-tail);
     text-align: center;
     position: relative;
-    padding-top: calc(80px + 6rem);
     overflow: hidden;
 }
 
@@ -725,58 +754,112 @@ code {
     top: 0;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: var(--hero-black-tail);
     width: 100%;
-    height: 100%;
     z-index: 0;
     overflow: hidden;
 }
 
+/* Below .hero-image-grid so photos aren’t washed out; light enough for code to read through gaps */
 .hero-bg::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.2) 40%, rgba(0, 0, 0, 0.72) 75%, rgba(0, 0, 0, 0.89) 98%, rgba(0, 0, 0, 1) 100%);
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.06) 0%, transparent 45%, rgba(0, 0, 0, 0.12) 78%, rgba(0, 0, 0, 0.2) 100%);
     pointer-events: none;
-    z-index: 1;
+    z-index: 0;
 }
 
+/* Hero photos: small “pinned” collage, not full-bleed strips */
 .hero-image-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: 1fr;
-    gap: 8px;
+    display: block;
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
     width: 100%;
     height: 100%;
+    z-index: 1;
+    pointer-events: none;
 }
 
 .hero-image-grid img {
-    width: 100%;
-    height: 100%;
+    position: absolute;
+    display: block;
     object-fit: cover;
     object-position: center;
-    opacity: 0.55;
-    transition: opacity 0.3s ease;
-    display: block;
+    opacity: 0.62;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    pointer-events: auto;
+    box-shadow: none;
+    border-radius: 0;
 }
 
 .hero-image-grid img:hover {
-    opacity: 0.8;
+    opacity: 0.88;
+}
+
+/* Varied sizes & placement — scrapbook / wall-pinned layout */
+.hero-image-grid img:nth-child(1) {
+    width: clamp(150px, 24vw, 320px);
+    aspect-ratio: 4 / 3;
+    top: 14%;
+    left: 5%;
+    transform: rotate(-2.2deg);
+}
+
+.hero-image-grid img:nth-child(2) {
+    width: clamp(120px, 16vw, 220px);
+    aspect-ratio: 3 / 5;
+    top: 8%;
+    left: 50%;
+    transform: translateX(-50%) rotate(1.4deg);
+}
+
+.hero-image-grid img:nth-child(3) {
+    width: clamp(130px, 18vw, 240px);
+    aspect-ratio: 1 / 1;
+    top: 20%;
+    right: 6%;
+    left: auto;
+    transform: rotate(2.5deg);
+}
+
+@media (max-width: 768px) {
+    .hero-image-grid img:nth-child(1) {
+        width: clamp(100px, 36vw, 200px);
+        top: 12%;
+        left: 2%;
+        transform: rotate(-2deg);
+    }
+
+    .hero-image-grid img:nth-child(2) {
+        width: clamp(88px, 28vw, 160px);
+        top: 6%;
+        left: 52%;
+        transform: translateX(-50%) rotate(1.2deg);
+    }
+
+    .hero-image-grid img:nth-child(3) {
+        width: clamp(92px, 30vw, 170px);
+        top: 38%;
+        right: 3%;
+        transform: rotate(2deg);
+    }
 }
 
 .hero-content {
     position: relative;
     z-index: 10;
+    /* Sits on lower part of image band, above the black tail */
+    padding-bottom: clamp(0.75rem, 2vh, 1.5rem);
 }
 
 .hero-title {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0;
     font-size: clamp(3.5rem, 5vw, 4rem);
+    text-shadow:
+        0 0 2rem rgba(0, 0, 0, 0.9),
+        0 0 3rem rgba(0, 0, 0, 0.55),
+        0 2px 20px rgba(0, 0, 0, 0.65);
 }
 
 .hero-subtitle {
@@ -1491,9 +1574,9 @@ main {
     }
     
     .hero {
-        padding: 6rem 1.5rem 4rem;
-        padding-top: calc(70px + 4rem);
-        min-height: 80vh;
+        --hero-black-tail: clamp(2.75rem, 9vw, 4.5rem);
+        min-height: clamp(300px, 52vh, 560px);
+        padding: calc(70px + 1.25rem) 1.5rem var(--hero-black-tail);
     }
     
     .footer {
@@ -1581,6 +1664,10 @@ body.print-code .hero-bg {
     padding: 0;
 }
 
+body.print-code .hero-bg {
+    bottom: 0;
+}
+
 body.print-code .hero-bg::after {
     background: #fff;
 }
@@ -1632,13 +1719,14 @@ body.print-code .hero-code__content .number {
 /* ============================================================
    Background: floating code snippets canvas
    ============================================================ */
+/* z-index 0 (not negative): negative values sit under the root background and hide the canvas */
 #code-bg {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    z-index: -1;
+    z-index: 0;
     pointer-events: none;
     display: block;
 }
@@ -1694,5 +1782,14 @@ body.print-code .hero-code__content .number {
     #scanlines::before,
     #scanlines::after {
         animation: none;
+    }
+
+    .hero-image-grid img:nth-child(1),
+    .hero-image-grid img:nth-child(3) {
+        transform: none;
+    }
+
+    .hero-image-grid img:nth-child(2) {
+        transform: translateX(-50%);
     }
 }
