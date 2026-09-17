@@ -20,54 +20,46 @@
     'n("0 5 7 8".add(irand(8)))\n.s("piano")\n.scale(scale).layer(\n  x => x.gain(0.7),\n  x => x.delay(0.3).delayfb(sine.range(0.1, 0.7).slow(2)).gain(0.3),\n  x => x.speed(0.5).room(0.1).gain(0.1).seg(4).clip(.3),\n  x => x.dist(1).dist("diode").gain(.3).seg(8).clip(0.3),\n  x => x.trans(12).room(sine.range(0.3, 0.7)).mask("[0 1] [1 0]").slow(4)\n)',
     '$: s("white")\n.clip(sine.range(0.1, 0.7).slow(2))\n.replicate(2)\n.gain(0.3)\n.room(.6)\n.o(3)',
     '$: n("0 4 7 2").slow(4)\n.s("supersaw")\n.seg(8)\n.clip(.3)\n.scale(scale)\n.trans(-12)\n.o(3)',
+    // From live Strudel set
+    '$: s("hd-3:6")\n  .scrub("<0 0.5 0.25 ~>")\n  .speed(140/160)\n  .gain(0.3)\n  .oLow(0.6)\n  .oEB(2)\n  .euclid(3,8)\n  .dist(1.65)\n  .dec(0.25)',
   ];
+
+  // Strudel-REPL-like palette (drawn faint on the light page)
+  var COLORS = {
+    default: '90, 100, 130',
+    comment: '120, 140, 170',
+    string:  '82, 208, 250',   // cyan
+    number:  '255, 130, 210',  // pink
+    keyword: '255, 130, 210',  // pink ($:, keywords)
+    method:  '71, 133, 244',   // blue
+    ident:   '100, 160, 220',  // soft blue
+  };
+
+  var KEYWORDS = {
+    var: 1, let: 1, func: 1, struct: 1, return: 1, try: 1, await: 1,
+    throws: 1, public: 1, private: 1, get: 1, set: 1, if: 1, else: 1,
+    async: 1, true: 1, false: 1, nil: 1, self: 1, some: 1, any: 1,
+  };
 
   var CONFIG = {
     FONT_SIZE_MIN: 6,
     FONT_SIZE_MAX: 10,
-    OPACITY_MIN: 0.12,
-    OPACITY_MAX: 0.20,
+    OPACITY_MIN: 0.10,
+    OPACITY_MAX: 0.18,
     FONT_FAMILY: "'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace",
-    COLOR: '255, 255, 255',
     LINE_HEIGHT: 1.45,
-    RADIUS_MIN: 6,    // px — orbit radius around home (kept tiny)
-    RADIUS_MAX: 18,
-    SPEED_MIN: 0.0002,
-    SPEED_MAX: 0.0004,
+    RADIUS_MIN: 4,
+    RADIUS_MAX: 10,
+    SPEED_MIN: 0.00015,
+    SPEED_MAX: 0.0003,
+    GAP_PX: 36,          // min gap between snippet bounding boxes
+    MARGIN_X: 0.04,
+    MARGIN_Y: 0.05,
+    PLACE_TRIES: 100,
   };
 
-  // One fixed home per snippet — distributed across the full viewport.
-  // shape: 0=circle, 3=triangle, 4=square, 5=pentagon, 6=hexagon
-  var HOMES = [
-    { fx: 0.06, fy: 0.10, shape: 0 },  //  0  var isPlaying
-    { fx: 0.36, fy: 0.08, shape: 3 },  //  1  struct RecordingView
-    { fx: 0.64, fy: 0.13, shape: 4 },  //  2  availableInputDevices
-    { fx: 0.90, fy: 0.09, shape: 5 },  //  3  func record
-    { fx: 0.14, fy: 0.37, shape: 6 },  //  4  outputVolume
-    { fx: 0.50, fy: 0.34, shape: 0 },  //  5  resetEngine
-    { fx: 0.82, fy: 0.38, shape: 3 },  //  6  configureAudioSession
-    { fx: 0.04, fy: 0.62, shape: 4 },  //  7  n(pick…)
-    { fx: 0.34, fy: 0.60, shape: 5 },  //  8  n("<0!7…")
-    { fx: 0.64, fy: 0.65, shape: 6 },  //  9  s("bd:4")
-    { fx: 0.92, fy: 0.61, shape: 0 },  // 10  s("track-dub")
-    { fx: 0.18, fy: 0.86, shape: 3 },  // 11  n("0 5 7 8"…)
-    { fx: 0.52, fy: 0.88, shape: 4 },  // 12  $: s("white")
-    { fx: 0.82, fy: 0.84, shape: 5 },  // 13  $: n("0 4 7 2")
-  ];
+  var SHAPES = [0, 3, 4, 5, 6];
 
-  // Mobile: 3 left + 3 right edge columns.
-  // fx kept ≥ 0.08 on left so the orbit radius never pushes snippets off-screen.
-  var HOMES_MOBILE = [
-    { fx: 0.08, fy: 0.18, shape: 0 },
-    { fx: 0.08, fy: 0.52, shape: 3 },
-    { fx: 0.08, fy: 0.82, shape: 4 },
-    { fx: 0.67, fy: 0.25, shape: 5 },
-    { fx: 0.63, fy: 0.60, shape: 6 },
-    { fx: 0.60, fy: 0.88, shape: 0 },
-  ];
-
-  // Position on a geometric path around (cx, cy).
-  // sides=0 → circle, sides≥3 → regular polygon edge interpolation.
   function orbitPos(sides, phase, cx, cy, r, tilt) {
     var a = phase + tilt;
     if (sides === 0) {
@@ -88,22 +80,161 @@
 
   function rnd(a, b) { return a + Math.random() * (b - a); }
 
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i];
+      a[i] = a[j];
+      a[j] = tmp;
+    }
+    return a;
+  }
+
+  function estimateSize(snippet, fontSize) {
+    var lines = snippet.split('\n');
+    var maxLen = 0;
+    for (var i = 0; i < lines.length; i++) {
+      if (lines[i].length > maxLen) maxLen = lines[i].length;
+    }
+    return {
+      w: Math.max(40, maxLen * fontSize * 0.62),
+      h: Math.max(fontSize, lines.length * fontSize * CONFIG.LINE_HEIGHT),
+    };
+  }
+
+  // Rejection-sample homes so bounding boxes (+ gap) don't overlap.
+  // fx/fy are the top-left of each snippet (matches how we draw).
+  function placeHomes(candidates, canvasW, canvasH) {
+    var placed = [];
+    var mx = CONFIG.MARGIN_X;
+    var my = CONFIG.MARGIN_Y;
+    var gap = CONFIG.GAP_PX;
+
+    for (var i = 0; i < candidates.length; i++) {
+      var c = candidates[i];
+      var maxFx = 1 - mx - c.w / canvasW;
+      var maxFy = 1 - my - c.h / canvasH;
+      if (mx >= maxFx || my >= maxFy) continue;
+
+      var found = false;
+      for (var attempt = 0; attempt < CONFIG.PLACE_TRIES; attempt++) {
+        var fx = rnd(mx, maxFx);
+        var fy = rnd(my, maxFy);
+        var ax1 = fx * canvasW;
+        var ay1 = fy * canvasH;
+        var ax2 = ax1 + c.w + gap;
+        var ay2 = ay1 + c.h + gap;
+        var overlaps = false;
+
+        for (var j = 0; j < placed.length; j++) {
+          var p = placed[j];
+          var bx1 = p.fx * canvasW - gap;
+          var by1 = p.fy * canvasH - gap;
+          var bx2 = bx1 + p.w + gap * 2;
+          var by2 = by1 + p.h + gap * 2;
+          if (ax1 < bx2 && ax2 > bx1 && ay1 < by2 && ay2 > by1) {
+            overlaps = true;
+            break;
+          }
+        }
+
+        if (!overlaps) {
+          placed.push({
+            fx: fx,
+            fy: fy,
+            w: c.w,
+            h: c.h,
+            snippet: c.snippet,
+            fontSize: c.fontSize,
+            opacity: c.opacity,
+            shape: SHAPES[i % SHAPES.length],
+          });
+          found = true;
+          break;
+        }
+      }
+      // Skip if nowhere to put it — fewer pieces beats collisions.
+      if (!found) continue;
+    }
+
+    return placed;
+  }
+
+  // Lightweight highlighter: comments, strings, numbers, keywords, .methods
+  function tokenize(line) {
+    var tokens = [];
+    var i = 0;
+    var n = line.length;
+    var afterDot = false;
+
+    while (i < n) {
+      var ch = line[i];
+
+      if (ch === '/' && line[i + 1] === '/') {
+        tokens.push({ text: line.slice(i), kind: 'comment' });
+        break;
+      }
+
+      if (ch === '"' || ch === "'") {
+        var q = ch;
+        var j = i + 1;
+        while (j < n && line[j] !== q) {
+          if (line[j] === '\\') j++;
+          j++;
+        }
+        tokens.push({ text: line.slice(i, Math.min(j + 1, n)), kind: 'string' });
+        i = Math.min(j + 1, n);
+        afterDot = false;
+        continue;
+      }
+
+      if (/[0-9]/.test(ch) || (ch === '.' && /[0-9]/.test(line[i + 1] || ''))) {
+        var k = i;
+        if (ch === '.') k++;
+        while (k < n && /[0-9.]/.test(line[k])) k++;
+        tokens.push({ text: line.slice(i, k), kind: 'number' });
+        i = k;
+        afterDot = false;
+        continue;
+      }
+
+      if (/[A-Za-z_$@#]/.test(ch)) {
+        var m = i + 1;
+        while (m < n && /[A-Za-z0-9_$@]/.test(line[m])) m++;
+        // include trailing : for $: / labels
+        if (line[m] === ':' && /[$@A-Za-z_]/.test(ch)) m++;
+        var word = line.slice(i, m);
+        var kind = 'ident';
+        if (afterDot) kind = 'method';
+        else if (KEYWORDS[word] || word === '$:' || word === '_$:' || word.charAt(0) === '$') kind = 'keyword';
+        else if (word.charAt(0) === '@' || word.charAt(0) === '#') kind = 'keyword';
+        tokens.push({ text: word, kind: kind });
+        i = m;
+        afterDot = false;
+        continue;
+      }
+
+      tokens.push({ text: ch, kind: 'default' });
+      afterDot = ch === '.';
+      i++;
+    }
+
+    return tokens;
+  }
+
   function init() {
     var isMobile = window.innerWidth < 768 || /Android|iPhone|iPad/i.test(navigator.userAgent);
-    var homes       = isMobile ? HOMES_MOBILE : HOMES;
-    var radiusMin   = isMobile ? 8  : CONFIG.RADIUS_MIN;
-    var radiusMax   = isMobile ? 16 : CONFIG.RADIUS_MAX;
+    var radiusMin   = isMobile ? 3  : CONFIG.RADIUS_MIN;
+    var radiusMax   = isMobile ? 8  : CONFIG.RADIUS_MAX;
     var fontSizeMin = isMobile ? 6  : CONFIG.FONT_SIZE_MIN;
     var fontSizeMax = isMobile ? 8  : CONFIG.FONT_SIZE_MAX;
+    var targetCount = isMobile ? 6 : SNIPPETS.length;
 
     var canvas = document.createElement('canvas');
     canvas.id = 'code-bg';
     document.body.insertBefore(canvas, document.body.firstChild);
     var ctx = canvas.getContext('2d');
-
-    var scanlines = document.createElement('div');
-    scanlines.id = 'scanlines';
-    document.body.insertBefore(scanlines, document.body.firstChild);
 
     function resize() {
       canvas.width  = window.innerWidth;
@@ -111,33 +242,58 @@
     }
     resize();
 
-    // One particle per home position, cycling through SNIPPETS
-    var particles = [];
-    for (var i = 0; i < homes.length; i++) {
-      var fontSize = Math.round(rnd(fontSizeMin, fontSizeMax));
-      var depthT   = (fontSize - fontSizeMin) / (fontSizeMax - fontSizeMin);
-      var baseOpacity = isMobile
-        ? rnd(0.14, 0.24)
-        : CONFIG.OPACITY_MIN + depthT * (CONFIG.OPACITY_MAX - CONFIG.OPACITY_MIN);
-      particles.push({
-        snippet:    SNIPPETS[i % SNIPPETS.length],
-        fontSize:   fontSize,
-        opacity:    baseOpacity,
-        pulseAmp:   rnd(0.02, 0.04),   // how much opacity breathes ±
-        pulsePhase: rnd(0, 2 * Math.PI),
-        pulseSpeed: rnd(0.001, 0.002), // slow independent pulse per snippet
-        textTilt:   rnd(-10, 10),
-        homeFx:     homes[i].fx,
-        homeFy:     homes[i].fy,
-        shape:      homes[i].shape,
-        radius:     rnd(radiusMin, radiusMax),
-        orbitTilt:  rnd(0, Math.PI),
-        phase:      rnd(0, 2 * Math.PI),
-        speed:      rnd(CONFIG.SPEED_MIN, CONFIG.SPEED_MAX) * (Math.random() > 0.5 ? 1 : -1),
-        x: 0,
-        y: 0,
-      });
+    function buildParticles() {
+      var pool = shuffle(SNIPPETS).slice(0, targetCount);
+      var candidates = [];
+      for (var i = 0; i < pool.length; i++) {
+        var fontSize = Math.round(rnd(fontSizeMin, fontSizeMax));
+        var depthT = (fontSize - fontSizeMin) / (fontSizeMax - fontSizeMin || 1);
+        var size = estimateSize(pool[i], fontSize);
+        // Soften very tall blocks so they don't claim huge exclusive zones
+        if (size.h > canvas.height * 0.28) {
+          fontSize = Math.max(fontSizeMin, fontSize - 2);
+          size = estimateSize(pool[i], fontSize);
+        }
+        candidates.push({
+          snippet: pool[i],
+          fontSize: fontSize,
+          opacity: isMobile
+            ? rnd(0.10, 0.16)
+            : CONFIG.OPACITY_MIN + depthT * (CONFIG.OPACITY_MAX - CONFIG.OPACITY_MIN),
+          w: size.w,
+          h: size.h,
+        });
+      }
+      // Place shorter blocks first — packs better, fewer forced skips
+      candidates.sort(function (a, b) { return (a.w * a.h) - (b.w * b.h); });
+
+      var homes = placeHomes(candidates, canvas.width, canvas.height);
+      var next = [];
+      for (var h = 0; h < homes.length; h++) {
+        var home = homes[h];
+        next.push({
+          snippet:    home.snippet,
+          fontSize:   home.fontSize,
+          opacity:    home.opacity,
+          pulseAmp:   rnd(0.015, 0.03),
+          pulsePhase: rnd(0, 2 * Math.PI),
+          pulseSpeed: rnd(0.001, 0.002),
+          textTilt:   rnd(-8, 8),
+          homeFx:     home.fx,
+          homeFy:     home.fy,
+          shape:      home.shape,
+          radius:     rnd(radiusMin, radiusMax),
+          orbitTilt:  rnd(0, Math.PI),
+          phase:      rnd(0, 2 * Math.PI),
+          speed:      rnd(CONFIG.SPEED_MIN, CONFIG.SPEED_MAX) * (Math.random() > 0.5 ? 1 : -1),
+          x: 0,
+          y: 0,
+        });
+      }
+      return next;
     }
+
+    var particles = buildParticles();
 
     function drawParticle(p) {
       var lines   = p.snippet.split('\n');
@@ -147,9 +303,19 @@
       ctx.translate(p.x, p.y);
       ctx.rotate(p.textTilt * Math.PI / 180);
       ctx.font         = p.fontSize + 'px ' + CONFIG.FONT_FAMILY;
-      ctx.fillStyle    = 'rgba(' + CONFIG.COLOR + ', ' + opacity + ')';
       ctx.textBaseline = 'top';
-      for (var j = 0; j < lines.length; j++) ctx.fillText(lines[j], 0, j * lineH);
+
+      for (var j = 0; j < lines.length; j++) {
+        var tokens = tokenize(lines[j]);
+        var x = 0;
+        for (var t = 0; t < tokens.length; t++) {
+          var tok = tokens[t];
+          var rgb = COLORS[tok.kind] || COLORS.default;
+          ctx.fillStyle = 'rgba(' + rgb + ', ' + opacity + ')';
+          ctx.fillText(tok.text, x, j * lineH);
+          x += ctx.measureText(tok.text).width;
+        }
+      }
       ctx.restore();
     }
 
@@ -178,8 +344,6 @@
       if (!animFrameId) animFrameId = requestAnimationFrame(tick);
     }
 
-    // Pause when tab is hidden, restart on any return path.
-    // pageshow covers iOS Safari bfcache restores where visibilitychange may not fire.
     document.addEventListener('visibilitychange', function () {
       if (document.hidden) {
         cancelAnimationFrame(animFrameId);
@@ -194,12 +358,14 @@
     var resizeTimer = null;
     window.addEventListener('resize', function () {
       clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(resize, 150);
+      resizeTimer = setTimeout(function () {
+        resize();
+        particles = buildParticles();
+      }, 150);
     });
 
     tick();
 
-    // Hero scroll fade
     var heroGrid = document.querySelector('.hero-image-grid');
     var heroEl   = document.querySelector('.hero');
     if (heroGrid && heroEl) {

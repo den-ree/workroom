@@ -11,7 +11,7 @@
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://denree.nl/assets/favicon.png">
     <title>About - Den Ree Workroom</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/style.css?v=45">
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
     <link rel="icon" type="image/png" href="/assets/favicon.png">
 </head>
@@ -20,7 +20,7 @@
     <header class="header" id="header">
         <nav class="navbar">
             <div class="navbar-container">
-                <a href="/" class="logo">Den Ree</a>
+                <a href="/" class="logo">@den_ree</a>
 
                 <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
                     <span></span>
@@ -33,8 +33,6 @@
                     <li class="nav-item"><a href="/software" class="nav-link">Software</a></li>
                     <li class="nav-item"><a href="/about" class="nav-link active">About</a></li>
                 </ul>
-
-                <a href="#contact" class="cta-button header-cta">CONTACT</a>
             </div>
         </nav>
     </header>
@@ -54,7 +52,7 @@
                         <img src="/images/about-me.png" alt="Den Ree">
                     </div>
                     <div class="about-contact__contact">
-                        <h2 class="about-contact__heading">CONTACT</h2>
+                        <h2 class="about-contact__heading">Contact</h2>
                         <p class="about-contact__prompt">For bookings and collaborations:</p>
                         <a href="mailto:contact@denree.nl" class="about-contact__email">contact@denree.nl</a>
                     </div>
@@ -67,58 +65,32 @@
             <div class="container">
                 <h2 class="home-block__heading">Journal</h2>
                 <p class="home-block__intro">Notes about making music with livecoding, building apps, experimenting with AI.</p>
-                <div class="grid grid--rows">
-                    <div class="card card--blog-row">
-                        <div class="card-meta">
-                            <small class="card-date">Mar 06, 2026</small>
-                            <small class="card-date">Amsterdam</small>
-                        </div>
-                        <div class="card-body">
-                            <h3 class="card-title">
-                                <a href="/journal/finding-algoraves">Finding Algoraves</a>
-                            </h3>
-                            <div class="card-badges">
-                                <span class="badge badge--thread badge--livecoding">livecoding music</span>
-                                <span class="badge">performance</span>
-                                <span class="badge">algorave</span>
-                            </div>
-                        </div>
-                    </div>
+                <ul class="log">
+                    <li class="log-item">
+                        <p class="log-meta">6 Mar 2026 · Amsterdam</p>
+                        <h3 class="log-title">
+                            <a href="/journal/finding-algoraves">Finding Algoraves</a>
+                        </h3>
+                        <p class="log-tags"><span class="badge badge--thread badge--livecoding">livecoding</span> · performance · algorave</p>
+                    </li>
 
-                    <div class="card card--blog-row">
-                        <div class="card-meta">
-                            <small class="card-date">Feb 28, 2026</small>
-                            <small class="card-date">Rotterdam</small>
-                        </div>
-                        <div class="card-body">
-                            <h3 class="card-title">
-                                <a href="/journal/wearing-the-suit">Wearing the Suit</a>
-                            </h3>
-                            <div class="card-badges">
-                                <span class="badge badge--thread badge--ai">working with AI</span>
-                                <span class="badge">tools</span>
-                            </div>
-                        </div>
-                    </div>
+                    <li class="log-item">
+                        <p class="log-meta">28 Feb 2026 · Rotterdam</p>
+                        <h3 class="log-title">
+                            <a href="/journal/wearing-the-suit">Wearing the Suit</a>
+                        </h3>
+                        <p class="log-tags"><span class="badge badge--thread badge--ai">working with AI</span> · tools</p>
+                    </li>
 
-                    <div class="card card--blog-row">
-                        <div class="card-meta">
-                            <small class="card-date">Sep 11, 2025</small>
-                            <small class="card-date">Amsterdam</small>
-                        </div>
-                        <div class="card-body">
-                            <h3 class="card-title">
-                                <a href="/journal/why-blanche">Why blanche?</a>
-                            </h3>
-                            <div class="card-badges">
-                                <span class="badge badge--thread badge--ai">working with AI</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="text-center mt-lg">
-                    <a href="/journal" class="cta-button cta-button--secondary">All journal notes</a>
-                </div>
+                    <li class="log-item">
+                        <p class="log-meta">11 Sep 2025 · Amsterdam</p>
+                        <h3 class="log-title">
+                            <a href="/journal/why-blanche">Why blanche?</a>
+                        </h3>
+                        <p class="log-tags"><span class="badge badge--thread badge--ai">working with AI</span></p>
+                    </li>
+                </ul>
+                <p class="log-more"><a href="/journal">All journal notes</a></p>
             </div>
         </section>
     </main>
@@ -126,7 +98,7 @@
     <!-- Footer -->
     <footer class="footer" id="site-footer"></footer>
 
-    <script src="/js/main.js"></script>
-    <script src="/js/background-code.js"></script>
+    <script src="/js/main.js?v=46"></script>
+    <script src="/js/background-code.js?v=4"></script>
 </body>
 </html>

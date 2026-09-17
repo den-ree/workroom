@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C — Inset plate · prototype</title>
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        /* C — Inset plate: silver chassis, white screen column */
+        body.chassis-c {
+            background: #e8e8e4;
+            color: #111;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body.chassis-c .proto-header {
+            background: linear-gradient(to bottom, #f2f2f0, #d8d8d4);
+            border-bottom: 1px solid #b8b8b4;
+        }
+
+        body.chassis-c .proto-plate {
+            flex: 1;
+            max-width: 42rem;
+            width: calc(100% - 2rem);
+            margin: 1.5rem auto 2rem;
+            background: #fff;
+            border: 1px solid #b8b8b4;
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.9),
+                0 1px 2px rgba(0, 0, 0, 0.06);
+        }
+
+        body.chassis-c .proto-main {
+            max-width: none;
+            padding: 2.5rem 1.75rem 3rem;
+        }
+
+        body.chassis-c .log-item {
+            border-color: #e4e4e0;
+        }
+
+        body.chassis-c .log-item:first-child {
+            border-top-color: #e4e4e0;
+        }
+
+        body.chassis-c .proto-footer {
+            background: linear-gradient(to bottom, #f2f2f0, #d8d8d4);
+            border-top: 1px solid #b8b8b4;
+        }
+
+        body.chassis-c .proto-back {
+            max-width: 42rem;
+        }
+    </style>
+</head>
+<body class="chassis-c">
+    <p class="proto-back"><a href="index.html">← All prototypes</a> · C — Inset plate</p>
+
+    <header class="proto-header">
+        <nav class="proto-nav">
+            <a href="#" class="proto-logo">Den Ree</a>
+            <ul class="proto-menu">
+                <li><a href="#">Music</a></li>
+                <li><a href="#">Software</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="proto-plate">
+        <main class="proto-main">
+            <h1 class="proto-heading">Journal</h1>
+            <p class="proto-sub">Notes about making music with livecoding, building apps, experimenting with AI.</p>
+
+            <ul class="log">
+                <li class="log-item">
+                    <p class="log-meta">6 Mar 2026 · Amsterdam</p>
+                    <h2 class="log-title"><a href="#">Finding Algoraves</a></h2>
+                    <p class="log-tags">livecoding · performance · algorave</p>
+                </li>
+                <li class="log-item">
+                    <p class="log-meta">28 Feb 2026 · Rotterdam</p>
+                    <h2 class="log-title"><a href="#">Wearing the Suit</a></h2>
+                    <p class="log-tags">working with AI · tools</p>
+                </li>
+                <li class="log-item">
+                    <p class="log-meta">11 Sep 2025 · Amsterdam</p>
+                    <h2 class="log-title"><a href="#">Why blanche?</a></h2>
+                    <p class="log-tags">working with AI</p>
+                </li>
+            </ul>
+
+            <p class="log-more"><a href="#">All journal notes</a></p>
+        </main>
+    </div>
+
+    <footer class="proto-footer">
+        <div class="proto-footer-inner">
+            <div class="proto-footer-links">
+                <a href="#">Instagram</a>
+                <a href="#">YouTube</a>
+                <a href="#">SoundCloud</a>
+                <a href="#">GitHub</a>
+                <a href="#">Bandcamp</a>
+            </div>
+            <p class="proto-footer-copy">© 2026 Den Ree</p>
+        </div>
+    </footer>
+</body>
+</html>

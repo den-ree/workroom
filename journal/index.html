@@ -10,7 +10,7 @@
     <meta property="og:url" content="https://denree.nl/journal">
     <meta property="og:type" content="website">
     <title>Journal - Den Ree Workroom</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/style.css?v=45">
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
     <link rel="icon" type="image/png" href="/assets/favicon.png">
 </head>
@@ -19,7 +19,7 @@
     <header class="header" id="header">
         <nav class="navbar">
             <div class="navbar-container">
-                <a href="/" class="logo">Den Ree</a>
+                <a href="/" class="logo">@den_ree</a>
 
                 <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
                     <span></span>
@@ -32,8 +32,6 @@
                     <li class="nav-item"><a href="/software" class="nav-link">Software</a></li>
                     <li class="nav-item"><a href="/about" class="nav-link">About</a></li>
                 </ul>
-
-                <a href="/about#contact" class="cta-button header-cta">CONTACT</a>
             </div>
         </nav>
     </header>
@@ -54,60 +52,42 @@
                 <div class="journal-active-filter" id="journalActiveFilter"></div>
 
                 <!-- Notes -->
-                <div class="grid grid--rows" id="journalGrid">
+                <ul class="log" id="journalGrid">
 
-                    <div class="card card--blog-row" data-thread="livecoding" data-status="finished">
-                        <div class="card-meta">
-                            <small class="card-date">Mar 06, 2026</small>
-                            <small class="card-date">Amsterdam</small>
-                        </div>
-                        <div class="card-body">
-                            <span class="card-status card-status--finished">finished</span>
-                            <h3 class="card-title">
-                                <a href="/journal/finding-algoraves">Finding Algoraves</a>
-                            </h3>
-                            <div class="card-badges">
-                                <span class="badge badge--thread badge--livecoding">livecoding music</span>
-                                <span class="badge">performance</span>
-                                <span class="badge">algorave</span>
-                            </div>
-                        </div>
-                    </div>
+                    <li class="log-item" data-thread="livecoding" data-status="finished">
+                        <p class="log-meta">6 Mar 2026 · Amsterdam</p>
+                        <h3 class="log-title">
+                            <a href="/journal/finding-algoraves">Finding Algoraves</a>
+                        </h3>
+                        <p class="log-tags">
+                            <button type="button" class="log-tag badge badge--thread badge--livecoding">livecoding music</button> ·
+                            <button type="button" class="log-tag">performance</button> ·
+                            <button type="button" class="log-tag">algorave</button>
+                        </p>
+                    </li>
 
-                    <div class="card card--blog-row" data-thread="ai" data-status="finished">
-                        <div class="card-meta">
-                            <small class="card-date">Feb 28, 2026</small>
-                            <small class="card-date">Rotterdam</small>
-                        </div>
-                        <div class="card-body">
-                            <span class="card-status card-status--finished">finished</span>
-                            <h3 class="card-title">
-                                <a href="/journal/wearing-the-suit">Wearing the Suit</a>
-                            </h3>
-                            <div class="card-badges">
-                                <span class="badge badge--thread badge--ai">working with AI</span>
-                                <span class="badge">tools</span>
-                            </div>
-                        </div>
-                    </div>
+                    <li class="log-item" data-thread="ai" data-status="finished">
+                        <p class="log-meta">28 Feb 2026 · Rotterdam</p>
+                        <h3 class="log-title">
+                            <a href="/journal/wearing-the-suit">Wearing the Suit</a>
+                        </h3>
+                        <p class="log-tags">
+                            <button type="button" class="log-tag badge badge--thread badge--ai">working with AI</button> ·
+                            <button type="button" class="log-tag">tools</button>
+                        </p>
+                    </li>
 
-                    <div class="card card--blog-row" data-thread="ai" data-status="finished">
-                        <div class="card-meta">
-                            <small class="card-date">Sep 11, 2025</small>
-                            <small class="card-date">Amsterdam</small>
-                        </div>
-                        <div class="card-body">
-                            <span class="card-status card-status--finished">finished</span>
-                            <h3 class="card-title">
-                                <a href="/journal/why-blanche">Why blanche?</a>
-                            </h3>
-                            <div class="card-badges">
-                                <span class="badge badge--thread badge--ai">working with AI</span>
-                            </div>
-                        </div>
-                    </div>
+                    <li class="log-item" data-thread="ai" data-status="finished">
+                        <p class="log-meta">11 Sep 2025 · Amsterdam</p>
+                        <h3 class="log-title">
+                            <a href="/journal/why-blanche">Why blanche?</a>
+                        </h3>
+                        <p class="log-tags">
+                            <button type="button" class="log-tag badge badge--thread badge--ai">working with AI</button>
+                        </p>
+                    </li>
 
-                </div>
+                </ul>
             </div>
         </section>
     </main>
@@ -115,30 +95,28 @@
     <!-- Footer -->
     <footer class="footer" id="site-footer"></footer>
 
-    <script src="/js/main.js"></script>
-    <script src="/js/background-code.js"></script>
+    <script src="/js/main.js?v=46"></script>
+    <script src="/js/background-code.js?v=4"></script>
     <script>
-        const cards = document.querySelectorAll('#journalGrid .card--blog-row');
+        const items = document.querySelectorAll('#journalGrid .log-item');
         const activeFilterEl = document.getElementById('journalActiveFilter');
         let activeTag = null;
 
         function applyFilter(tag) {
-            cards.forEach(card => {
+            items.forEach(item => {
                 if (!tag) {
-                    card.classList.remove('is-hidden');
+                    item.classList.remove('is-hidden');
                     return;
                 }
-                const match = Array.from(card.querySelectorAll('.badge'))
-                    .some(b => b.textContent.trim() === tag);
-                card.classList.toggle('is-hidden', !match);
+                const match = Array.from(item.querySelectorAll('.log-tag'))
+                    .some(t => t.textContent.trim() === tag);
+                item.classList.toggle('is-hidden', !match);
             });
         }
 
-        function showChip(label, badgeClass) {
+        function showChip(label) {
             activeFilterEl.innerHTML =
-                `<span class="journal-tag-chip ${badgeClass}" id="activeTagChip">
-                    ${label} <span class="journal-tag-chip__remove">×</span>
-                </span>`;
+                `<button type="button" class="log-active-filter" id="activeTagChip">${label} ×</button>`;
             document.getElementById('activeTagChip').addEventListener('click', clearFilter);
         }
 
@@ -148,11 +126,10 @@
             applyFilter(null);
         }
 
-        document.querySelectorAll('#journalGrid .badge').forEach(badge => {
-            badge.style.cursor = 'pointer';
-            badge.addEventListener('click', e => {
+        document.querySelectorAll('#journalGrid .log-tag').forEach(tagBtn => {
+            tagBtn.addEventListener('click', e => {
                 e.stopPropagation();
-                const label = badge.textContent.trim();
+                const label = tagBtn.textContent.trim();
 
                 if (activeTag === label) {
                     clearFilter();
@@ -160,10 +137,7 @@
                 }
 
                 activeTag = label;
-
-                // Carry badge classes to chip so thread colors apply
-                const chipClass = badge.className.replace('badge', '').trim();
-                showChip(label, 'badge ' + chipClass);
+                showChip(label);
                 applyFilter(label);
             });
         });

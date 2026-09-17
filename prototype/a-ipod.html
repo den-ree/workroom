@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A — iPod · prototype</title>
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        /* A — iPod: white page, hairline header, lots of air */
+        body.chassis-a {
+            background: #f7f7f5;
+            color: #111;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body.chassis-a .proto-header {
+            background: #f7f7f5;
+            border-bottom: 1px solid #ddd;
+        }
+
+        body.chassis-a .proto-main {
+            flex: 1;
+            padding-top: 4rem;
+            padding-bottom: 5rem;
+        }
+
+        body.chassis-a .proto-heading {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        body.chassis-a .proto-sub {
+            margin-bottom: 3.5rem;
+        }
+
+        body.chassis-a .log-item {
+            padding: 2rem 0;
+            border-color: #e0e0dc;
+        }
+
+        body.chassis-a .log-item:first-child {
+            border-top-color: #e0e0dc;
+        }
+
+        body.chassis-a .proto-footer {
+            background: #f7f7f5;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body class="chassis-a">
+    <p class="proto-back"><a href="index.html">← All prototypes</a> · A — iPod</p>
+
+    <header class="proto-header">
+        <nav class="proto-nav">
+            <a href="#" class="proto-logo">Den Ree</a>
+            <ul class="proto-menu">
+                <li><a href="#">Music</a></li>
+                <li><a href="#">Software</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="proto-main">
+        <h1 class="proto-heading">Journal</h1>
+        <p class="proto-sub">Notes about making music with livecoding, building apps, experimenting with AI.</p>
+
+        <ul class="log">
+            <li class="log-item">
+                <p class="log-meta">6 Mar 2026 · Amsterdam</p>
+                <h2 class="log-title"><a href="#">Finding Algoraves</a></h2>
+                <p class="log-tags">livecoding · performance · algorave</p>
+            </li>
+            <li class="log-item">
+                <p class="log-meta">28 Feb 2026 · Rotterdam</p>
+                <h2 class="log-title"><a href="#">Wearing the Suit</a></h2>
+                <p class="log-tags">working with AI · tools</p>
+            </li>
+            <li class="log-item">
+                <p class="log-meta">11 Sep 2025 · Amsterdam</p>
+                <h2 class="log-title"><a href="#">Why blanche?</a></h2>
+                <p class="log-tags">working with AI</p>
+            </li>
+        </ul>
+
+        <p class="log-more"><a href="#">All journal notes</a></p>
+    </main>
+
+    <footer class="proto-footer">
+        <div class="proto-footer-inner">
+            <div class="proto-footer-links">
+                <a href="#">Instagram</a>
+                <a href="#">YouTube</a>
+                <a href="#">SoundCloud</a>
+                <a href="#">GitHub</a>
+                <a href="#">Bandcamp</a>
+            </div>
+            <p class="proto-footer-copy">© 2026 Den Ree</p>
+        </div>
+    </footer>
+</body>
+</html>

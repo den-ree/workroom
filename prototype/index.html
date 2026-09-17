@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prototypes — pick a chassis</title>
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        body.compare {
+            background: #f0f0ee;
+            color: #111;
+            padding: 3rem 1.5rem 4rem;
+            max-width: 40rem;
+            margin: 0 auto;
+        }
+        .compare h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .compare .lead {
+            color: #555;
+            margin-bottom: 2.5rem;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        .compare ol {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+        .compare a.option {
+            display: block;
+            padding: 1.25rem 1.5rem;
+            background: #fff;
+            border: 1px solid #c8c8c4;
+            color: #111;
+            text-decoration: none;
+        }
+        .compare a.option:hover {
+            border-color: #111;
+        }
+        .compare a.option strong {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 0.35rem;
+        }
+        .compare a.option span {
+            display: block;
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        .compare .note {
+            margin-top: 2.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body class="compare">
+    <h1>Pick a chassis</h1>
+    <p class="lead">Three static mockups of the journal list. Same content on all — choose the look, then we’ll apply it to the live site.</p>
+    <ol>
+        <li>
+            <a class="option" href="a-ipod.html">
+                <strong>A — iPod</strong>
+                <span>White page, hairline header, lots of air. Closest to original iPod UI.</span>
+            </a>
+        </li>
+        <li>
+            <a class="option" href="b-g4.html">
+                <strong>B — PowerBook G4</strong>
+                <span>White well, brushed aluminum header and footer, 1px metal edge.</span>
+            </a>
+        </li>
+        <li>
+            <a class="option" href="c-inset.html">
+                <strong>C — Inset plate</strong>
+                <span>Silver page, white content column like a device screen, aluminum header.</span>
+            </a>
+        </li>
+    </ol>
+    <p class="note">Not linked from the live site. Reply with A, B, C, or a mix (e.g. “B header, A page”).</p>
+</body>
+</html>

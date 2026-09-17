@@ -7,8 +7,6 @@
     var events = window.TIMELINE_EVENTS || [];
 
     var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    var COLORED_BADGES = { livecoding: 'badge--livecoding', ai: 'badge--ai', newmedia: 'badge--newmedia' };
-
     function hasFullDate(ev) {
         return /^\d{4}-\d{2}-\d{2}$/.test(ev.date);
     }
@@ -491,7 +489,7 @@
                 return x + ',' + y;
             });
             svg.innerHTML = '<polyline points="' + points.join(' ') +
-                '" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="1"/>';
+                '" fill="none" stroke="rgba(0,0,0,0.25)" stroke-width="1"/>';
         }
 
         layout();
@@ -745,17 +743,15 @@
     /* ---------------- /music performance log ---------------- */
 
     function buildRow(ev, upcoming) {
-        var card = el('div', 'card card--blog-row' + (upcoming ? ' card--event-upcoming' : ''));
+        var item = el('li', 'log-item' + (upcoming ? ' log-item--upcoming' : ''));
 
-        var meta = el('div', 'card-meta');
-        meta.appendChild(el('small', 'card-date', logDate(ev)));
-        if (ev.city) meta.appendChild(el('small', 'card-date', ev.city));
-        card.appendChild(meta);
+        var metaParts = [logDate(ev)];
+        if (ev.city) metaParts.push(ev.city);
+        item.appendChild(el('p', 'log-meta', metaParts.join(' · ')));
 
-        var body = el('div', 'card-body');
-        if (upcoming) body.appendChild(el('span', 'card-status card-status--next', 'upcoming'));
+        if (upcoming) item.appendChild(el('p', 'log-status', 'upcoming'));
 
-        var title = el('h3', 'card-title');
+        var title = el('h3', 'log-title');
         if (ev.link) {
             var a = el('a', null, ev.title);
             a.href = ev.link;
@@ -767,24 +763,22 @@
         } else {
             title.textContent = ev.title;
         }
-        body.appendChild(title);
+        item.appendChild(title);
 
         if (ev.description) {
-            body.appendChild(el('p', 'card-description', ev.description));
+            item.appendChild(el('p', 'log-desc', ev.description));
         } else if (upcoming && (ev.tentative || hasMonthDate(ev))) {
-            body.appendChild(el('p', 'card-description', 'More details soon.'));
+            item.appendChild(el('p', 'log-desc', 'More details soon.'));
         }
 
-        var badges = el('div', 'card-badges');
-        if (ev.venue) badges.appendChild(el('span', 'badge', ev.venue));
-        (ev.badges || []).forEach(function (b) {
-            var cls = COLORED_BADGES[b] ? 'badge badge--thread ' + COLORED_BADGES[b] : 'badge';
-            badges.appendChild(el('span', cls, b));
-        });
-        if (badges.children.length) body.appendChild(badges);
+        var tagParts = [];
+        if (ev.venue) tagParts.push(ev.venue);
+        (ev.badges || []).forEach(function (b) { tagParts.push(b); });
+        if (tagParts.length) {
+            item.appendChild(el('p', 'log-tags', tagParts.join(' · ')));
+        }
 
-        card.appendChild(body);
-        return card;
+        return item;
     }
 
     function initPerformanceLog() {
@@ -797,15 +791,15 @@
 
         if (upcoming.length) {
             root.appendChild(el('h3', 'performance-group__heading', 'Upcoming'));
-            var upGrid = el('div', 'grid grid--rows');
-            upcoming.forEach(function (ev) { upGrid.appendChild(buildRow(ev, true)); });
-            root.appendChild(upGrid);
+            var upList = el('ul', 'log');
+            upcoming.forEach(function (ev) { upList.appendChild(buildRow(ev, true)); });
+            root.appendChild(upList);
         }
 
         root.appendChild(el('h3', 'performance-group__heading', 'Past'));
-        var pastGrid = el('div', 'grid grid--rows');
-        past.forEach(function (ev) { pastGrid.appendChild(buildRow(ev, false)); });
-        root.appendChild(pastGrid);
+        var pastList = el('ul', 'log');
+        past.forEach(function (ev) { pastList.appendChild(buildRow(ev, false)); });
+        root.appendChild(pastList);
     }
 
     initUniverse();
