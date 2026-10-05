@@ -17,7 +17,7 @@ Den Ree is the personal site of a musician, livecoder, and A/V performer based i
 ## Music
 
 - Machine Music: A/V performance with live-coded music and real-time visuals, in collaboration with Nikilia; developed at V2_ Lab for the Unstable Media
-- Performance log: upcoming and past shows at https://denree.nl/music — including ZONE XP Algorave at Le Sucre (Grame Festival, Lyon, 6 Nov 2026), ADE Live Coding Sessions Algorave at DOKA (Amsterdam, 21 Oct 2026), GRAW performance / installation at De Achtertuin (Rotterdam, 18 Sep 2026), Beeld & Geluid Open Culture Tech Residency (Hilversum), EXPORT × Boijmans: Night Pioneers (Pixel Pioneers programme, Museum Boijmans Van Beuningen), Algorave Amsterdam (Vondelbunker), V2_ Live: “Mirage”, and more
+- Performance log: upcoming and past shows at https://denree.nl/music — including ZONE XP Algorave at Le Sucre (Grame Festival, Lyon, 6 Nov 2026), NDA/ Machine Music live VJ set at Festival Broncode, the opening of the KB national library exhibition “Broncode: boeken in het AI-tijdperk” (Den Haag, 29 Oct 2026), ADE Live Coding Sessions Algorave at DOKA (Amsterdam, 21 Oct 2026), GRAW performance / installation at De Achtertuin (Rotterdam, 18 Sep 2026) — premiere of BOIS, a live set with Rik Mertens (https://soundcloud.com/den-ree/bois), Beeld & Geluid Open Culture Tech Residency (Hilversum), EXPORT × Boijmans: Night Pioneers (Pixel Pioneers programme, Museum Boijmans Van Beuningen), Algorave Amsterdam (Vondelbunker), V2_ Live: “Mirage”, and more
 - Listen: https://soundcloud.com/den-ree/machine-music-by-den-ree-x-nikilia
 
 ## Journal
