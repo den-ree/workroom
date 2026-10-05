@@ -165,17 +165,46 @@
                             coords.rel = 'noopener noreferrer';
                         }
                     }
-                    var line = el('span', 'tl-node__upnext-line', upnextDate(item) + ' - ' + item.title);
-                    coords.appendChild(line);
+                    var preview = imagesOf(item)[0];
+                    if (preview) {
+                        row.classList.add('tl-node__upnext-item--preview');
+                        var thumb = el('img', 'tl-node__upnext-thumb');
+                        thumb.src = preview;
+                        thumb.alt = '';
+                        thumb.loading = 'lazy';
+                        coords.appendChild(thumb);
+                    }
+                    var text = el('span', 'tl-node__upnext-text');
+                    coords.appendChild(text);
+                    var line = el('span', 'tl-node__upnext-line', upnextDate(item) + ' - ');
+                    // logo + logoFor: the logo stands in for that word of the title;
+                    // logo alone: it is appended after the line as a badge.
+                    var logoAt = item.logo && item.logoFor ? item.title.indexOf(item.logoFor) : -1;
+                    var badge = null;
+                    if (item.logo) {
+                        badge = el('img', 'tl-node__upnext-logo');
+                        badge.src = item.logo;
+                        badge.alt = logoAt >= 0 ? item.logoFor : '';
+                    }
+                    if (logoAt >= 0) {
+                        badge.classList.add('tl-node__upnext-logo--inline');
+                        line.appendChild(document.createTextNode(item.title.slice(0, logoAt)));
+                        line.appendChild(badge);
+                        line.appendChild(document.createTextNode(item.title.slice(logoAt + item.logoFor.length)));
+                    } else {
+                        line.appendChild(document.createTextNode(item.title));
+                    }
+                    text.appendChild(line);
                     if (item.tentative) {
                         line.appendChild(document.createTextNode(' '));
                         line.appendChild(el('span', 'tl-node__upnext-hope', '[tbc]'));
                     }
+                    if (badge && logoAt < 0) line.appendChild(badge);
                     var metaParts = [];
                     if (item.kind) metaParts.push(item.kind);
                     if (item.city) metaParts.push(item.city);
                     if (metaParts.length) {
-                        coords.appendChild(el('span', 'tl-node__upnext-meta', metaParts.join(' - ')));
+                        text.appendChild(el('span', 'tl-node__upnext-meta', metaParts.join(' - ')));
                     }
                     row.appendChild(coords);
                     list.appendChild(row);
@@ -231,6 +260,29 @@
     var FOCUS_GUTTER_NARROW = 16;
     var NARROW = 700;
     var HINT_FADE = 40;
+    // Scroll intro: coming-next starts centred under the title; the first stretch of
+    // scroll slides it to the left inset while the timeline fades in, then the strip scrolls.
+    var INTRO_SHARE = 0.55;    // intro scroll distance as a share of viewport height
+    var INTRO_MIN = 260;       // ...but never shorter than this (px of wheel/drag)
+    var INTRO_STUB = 70;       // px of line shown from coming-next before the intro plays
+    var INTRO_STAGGER = 0.12;  // fade-in delay per timeline node (in intro progress)
+    var INTRO_SCALE = 1.6;     // coming-next size while centred (shrinks to 1 as it docks)
+    var TITLE_LIFT = 48;       // px the title rises while it fades out
+    var TITLE_OUT = 0.6;       // share of the intro over which the title leaves
+    // Scroll highlight: the event passing the focus line scales up a little.
+    var FOCUS_AT = 0.5;        // focus line as a share of strip width (centre)
+    var FOCUS_SCALE = 0.08;    // extra scale at the focus line
+    var FOCUS_REACH = 0.3;     // falloff distance as a share of strip width
+    // Side fade: strip edges dissolve into the background (CSS mask, --edge-l / --edge-r).
+    // Parallax: off-centre events drift by a per-event depth; the line follows.
+    var PARALLAX_X = 34;       // max sideways drift (px) at the strip edge
+    var PARALLAX_Y = 16;       // max vertical drift (px), alternating up/down
+    // Gallery (cover-flow) depth: side events recede, their photos turn toward the centre.
+    var SIDE_SHRINK = 0.14;    // scale lost at the strip edge
+    var COVER_ANGLE = 26;      // max photo rotateY (deg) at the strip edge
+    var EDGE_ALPHA = 0.12;     // opacity at the strip edges
+    var EDGE_LEFT_IN = 280;    // px of scroll before the left edge starts fading
+                               // (keeps docked coming-next fully visible)
 
     function isTouchUi() {
         return window.matchMedia('(hover: none)').matches;
@@ -401,16 +453,125 @@
 
         var nodes = universeEvents.map(buildNode);
         nodes.forEach(function (n) { canvas.appendChild(n); });
+        var stacks = nodes.map(function (n) { return n.querySelector('.tl-node__mediastack'); });
 
         var homeScroll = 0;
         var titleFadeAt = HINT_FADE;
+
+        // Intro state. Every input drives one "virtual" position:
+        // [0, introDist) plays the intro, beyond that it is strip.scrollLeft + introDist.
+        var introDist = 0;
+        var introP = head ? 0 : 1;
+        var introOffset = 0;   // px the canvas is shifted right so coming-next is centred
+        var canvasShift = 0;   // current canvas translateX (intro + overscroll)
+        var introScale = 1;    // coming-next scale at the start of the intro
+        var titleLift = 0;     // current title rise (px), undone when measuring layout
+        var nodeCenters = [];  // node centre x in canvas coordinates (from layout)
+        var markerBase = [];   // resting marker centres [x, y] in canvas coordinates
+        var nodeOffsets = [];  // current parallax drift [dx, dy] per node
+        var overshoot = 0;
+        var lineLen = 0;
+
+        function introEase(t) {
+            return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        }
+
+        function depthOf(i) {
+            var f = Math.sin(i * 12.9898 + 4.1414) * 43758.5453;
+            return 0.35 + 0.65 * (f - Math.floor(f));
+        }
+
+        function virtualPos() { return introDist * introP + strip.scrollLeft; }
 
         function syncChrome() {
             var delta = Math.abs(strip.scrollLeft - homeScroll);
             var hint = document.getElementById('universeHint');
             var title = document.getElementById('universeTitle');
-            if (hint) hint.style.opacity = delta > HINT_FADE ? '0' : '';
-            if (title) title.classList.toggle('is-hidden', delta > titleFadeAt);
+            if (hint) hint.style.opacity = virtualPos() > HINT_FADE ? '0' : '';
+            // With an intro the title leaves during it (applyIntro); otherwise fade on scroll.
+            if (title && !head) title.classList.toggle('is-hidden', delta > titleFadeAt);
+        }
+
+        // Position the canvas and fade timeline nodes for the current intro progress.
+        function applyIntro() {
+            var e = introEase(introP);
+            var visual = overshoot ? overshoot / (1 + Math.abs(overshoot) / 150) : 0;
+            canvasShift = introOffset * (1 - e) - visual;
+            canvas.style.transform = canvasShift ? 'translateX(' + canvasShift + 'px)' : '';
+            if (head) {
+                // Big while centred, settles to normal size as it docks left. Scales
+                // around the marker centre so the line endpoint stays put.
+                var scale = introScale + (1 - introScale) * e;
+                nodes[0].style.transform = scale !== 1 ? 'scale(' + scale.toFixed(4) + ')' : '';
+
+                // Title drifts up and fades out over the first part of the intro.
+                var title = document.getElementById('universeTitle');
+                if (title) {
+                    var t = introEase(Math.min(1, introP / TITLE_OUT));
+                    titleLift = TITLE_LIFT * t;
+                    title.style.transition = 'none';
+                    title.style.transform = t ? 'translate(-50%, calc(-50% - ' + titleLift.toFixed(1) + 'px))' : '';
+                    title.style.opacity = t ? (1 - t).toFixed(3) : '';
+                    title.style.visibility = t >= 1 ? 'hidden' : '';
+                }
+            }
+            nodes.forEach(function (n, i) {
+                if (head && i === 0) return;
+                var o = Math.max(0, Math.min(1, e * 1.6 - Math.min(i - 1, 5) * INTRO_STAGGER));
+                n.style.opacity = o >= 1 ? '' : o.toFixed(3);
+                n.style.pointerEvents = o < 0.5 ? 'none' : '';
+            });
+            var line = svg.firstChild;
+            if (line && lineLen) {
+                line.style.strokeDasharray = e >= 1
+                    ? ''
+                    : Math.round(INTRO_STUB + e * strip.clientWidth * 1.5) + ' ' + Math.ceil(lineLen);
+            }
+            strip.classList.toggle('is-intro', introP < 1);
+        }
+
+        // Scale up the event nearest the focus line; fades in with the intro.
+        function applyFocus() {
+            var w = strip.clientWidth || 1;
+            var focusX = w * FOCUS_AT;
+            var reach = w * FOCUS_REACH;
+            var amount = introEase(introP);
+            var best = -1, bestK = 0.5;
+            nodes.forEach(function (n, i) {
+                if (head && i === 0) { nodeOffsets[i] = [0, 0]; return; }
+                var x = nodeCenters[i] - strip.scrollLeft + canvasShift;
+                var k = Math.max(0, 1 - Math.abs(x - focusX) / reach);
+                k = k * k * (3 - 2 * k) * amount; // smoothstep
+                // Position across the strip: -1 (left edge) … 0 (centre) … 1 (right edge).
+                var side = Math.max(-1.5, Math.min(1.5, (x - focusX) / (w / 2))) * amount;
+                // Parallax drift, scaled by a per-event depth.
+                var d = side * depthOf(i);
+                var dx = -d * PARALLAX_X;
+                var dy = d * PARALLAX_Y * (i % 2 ? 1 : -1);
+                nodeOffsets[i] = [dx, dy];
+                // Gallery: shrink toward the edges, grow at the focus line.
+                var sc = 1 - SIDE_SHRINK * Math.min(1, Math.abs(side)) + FOCUS_SCALE * k;
+                n.style.transform = 'translate(' + dx.toFixed(2) + 'px, ' + dy.toFixed(2) + 'px)' +
+                    (Math.abs(sc - 1) > 0.0001 ? ' scale(' + sc.toFixed(4) + ')' : '');
+                if (stacks[i]) {
+                    var angle = Math.max(-1, Math.min(1, side)) * COVER_ANGLE;
+                    stacks[i].style.transform = Math.abs(angle) > 0.05
+                        ? 'perspective(600px) rotateY(' + angle.toFixed(2) + 'deg)' : '';
+                }
+                if (k > bestK) { bestK = k; best = i; }
+            });
+            writeLine();
+            nodes.forEach(function (n, i) { n.classList.toggle('is-focus', i === best); });
+
+            var leftIn = introP < 1 ? 0 : Math.min(1, strip.scrollLeft / EDGE_LEFT_IN);
+            strip.style.setProperty('--edge-l', (1 - (1 - EDGE_ALPHA) * leftIn).toFixed(3));
+            strip.style.setProperty('--edge-r', EDGE_ALPHA);
+        }
+
+        function render() {
+            applyIntro();
+            applyFocus();
+            syncChrome();
         }
 
         function layout() {
@@ -453,7 +614,7 @@
             var upY = 28;
             if (titleEl && stripH) {
                 var stripTop = strip.getBoundingClientRect().top;
-                var underTitle = titleEl.getBoundingClientRect().bottom - stripTop + TITLE_TO_COMING;
+                var underTitle = titleEl.getBoundingClientRect().bottom + titleLift - stripTop + TITLE_TO_COMING;
                 upY = Math.max(14, Math.min(48, (underTitle / stripH) * 100));
             }
             var downY = Math.min(56, upY + (DOWN_BAND_SHARE * 100));
@@ -464,8 +625,21 @@
                 var y = Math.min(band, maxYOf(universeEvents[i]));
                 n.style.setProperty('--y', y + '%');
             });
+            nodeCenters = xs.map(function (x, i) { return x + widths[i] / 2; });
+            // Highlight scale pivots on each marker so the timeline line stays attached.
+            nodes.forEach(function (n, i) {
+                if (head && i === 0) return;
+                var m = n.querySelector('.tl-node__marker');
+                if (m) {
+                    n.style.transformOrigin = (m.offsetLeft + m.offsetWidth / 2) + 'px ' +
+                        (m.offsetTop + m.offsetHeight / 2) + 'px';
+                }
+            });
+            // Tail room so the last event can scroll all the way to the focus line.
+            var lastI = xs.length - 1;
             canvas.style.width = (xs.length
-                ? xs[xs.length - 1] + widths[widths.length - 1] + CANVAS_TAIL
+                ? Math.max(xs[lastI] + widths[lastI] + CANVAS_TAIL,
+                    nodeCenters[lastI] + strip.clientWidth * (1 - FOCUS_AT))
                 : vw) + 'px';
 
             // Keep homeScroll at 0 when left-anchored (leftPad already places the start).
@@ -473,8 +647,20 @@
             homeScroll = 0;
             var delta = strip.scrollLeft - prevHome;
             strip.scrollLeft = Math.max(0, homeScroll + delta);
+
+            // Intro: how far right the canvas starts so coming-next is centred.
+            introDist = head ? Math.round(Math.max(INTRO_MIN, window.innerHeight * INTRO_SHARE)) : 0;
+            introOffset = head ? Math.round(strip.clientWidth / 2 - (xs[0] + widths[0] / 2)) : 0;
+            if (head) {
+                // Cap the start size so the scaled block still fits narrow screens.
+                introScale = Math.max(1, Math.min(INTRO_SCALE, (strip.clientWidth - 32) / (widths[0] || 1)));
+                var marker = nodes[0].querySelector('.tl-node__marker');
+                var originY = marker ? marker.offsetTop + marker.offsetHeight / 2 : 0;
+                nodes[0].style.transformOrigin = '50% ' + originY + 'px';
+            }
+            applyIntro();
             drawLines();
-            syncChrome();
+            render();
         }
 
         function drawLines() {
@@ -482,14 +668,29 @@
             svg.setAttribute('width', canvas.scrollWidth);
             svg.setAttribute('height', strip.clientHeight);
             svg.style.width = canvas.scrollWidth + 'px';
-            var points = Array.prototype.map.call(strip.querySelectorAll('.tl-node__marker'), function (m) {
-                var r = m.getBoundingClientRect();
-                var x = r.left + r.width / 2 - stripRect.left + strip.scrollLeft;
-                var y = r.top + r.height / 2 - stripRect.top;
-                return x + ',' + y;
+            markerBase = nodes.map(function (n, i) {
+                var r = n.querySelector('.tl-node__marker').getBoundingClientRect();
+                var off = nodeOffsets[i] || [0, 0];
+                // Canvas coordinates: undo the intro/overscroll shift and parallax drift.
+                return [
+                    r.left + r.width / 2 - stripRect.left + strip.scrollLeft - canvasShift - off[0],
+                    r.top + r.height / 2 - stripRect.top - off[1]
+                ];
             });
-            svg.innerHTML = '<polyline points="' + points.join(' ') +
-                '" fill="none" stroke="rgba(0,0,0,0.25)" stroke-width="1"/>';
+            svg.innerHTML = '<polyline fill="none" stroke="rgba(0,0,0,0.25)" stroke-width="1"/>';
+            writeLine();
+            lineLen = svg.firstChild && svg.firstChild.getTotalLength
+                ? svg.firstChild.getTotalLength() * 1.2 : 0; // slack for parallax stretch
+        }
+
+        // Line through each marker's resting point plus its current parallax drift.
+        function writeLine() {
+            var line = svg.firstChild;
+            if (!line || !markerBase.length) return;
+            line.setAttribute('points', markerBase.map(function (p, i) {
+                var off = nodeOffsets[i] || [0, 0];
+                return (p[0] + off[0]).toFixed(1) + ',' + (p[1] + off[1]).toFixed(1);
+            }).join(' '));
         }
 
         layout();
@@ -503,28 +704,21 @@
         var reduceMotion = window.matchMedia &&
             window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         var animRaf = null;
-        var overshoot = 0;
 
         function maxScroll() { return strip.scrollWidth - strip.clientWidth; }
+        function maxVirtual() { return introDist + maxScroll(); }
 
         function cancelAnimation() {
             if (animRaf) { cancelAnimationFrame(animRaf); animRaf = null; }
         }
 
-        function renderOvershoot() {
-            if (overshoot) {
-                var visual = overshoot / (1 + Math.abs(overshoot) / 150);
-                canvas.style.transform = 'translateX(' + (-visual) + 'px)';
-            } else {
-                canvas.style.transform = '';
-            }
-        }
-
+        // pos is a virtual position (intro + strip scroll).
         function setScroll(pos, allowOverscroll) {
-            var clamped = Math.max(0, Math.min(maxScroll(), pos));
-            strip.scrollLeft = clamped;
+            var clamped = Math.max(0, Math.min(maxVirtual(), pos));
+            introP = introDist ? Math.min(1, clamped / introDist) : 1;
+            strip.scrollLeft = Math.max(0, clamped - introDist);
             overshoot = allowOverscroll ? pos - clamped : 0;
-            renderOvershoot();
+            render();
         }
 
         function springBack() {
@@ -538,7 +732,7 @@
                 overshoot = start * Math.pow(1 - t, 3);
                 if (t >= 1) { overshoot = 0; animRaf = null; }
                 else animRaf = requestAnimationFrame(frame);
-                renderOvershoot();
+                render();
             });
         }
 
@@ -555,11 +749,11 @@
                     overshoot = peak * Math.pow(1 - (elapsed - OUT) / BACK, 3);
                 } else {
                     overshoot = 0;
-                    renderOvershoot();
+                    render();
                     animRaf = null;
                     return;
                 }
-                renderOvershoot();
+                render();
                 animRaf = requestAnimationFrame(frame);
             });
         }
@@ -567,63 +761,81 @@
         // Free glide after a flick (velocity in scrollLeft px/ms).
         function startGlide(v) {
             cancelAnimation();
-            var pos = strip.scrollLeft;
+            var pos = virtualPos();
             var last = performance.now();
             animRaf = requestAnimationFrame(function frame(now) {
                 var dt = Math.min(50, Math.max(1, now - last));
                 last = now;
                 pos += v * dt;
                 v *= Math.pow(0.95, dt / 16);
-                var max = maxScroll();
+                var max = maxVirtual();
                 if (pos <= 0 && v < 0) {
-                    strip.scrollLeft = 0;
+                    setScroll(0, false);
                     bounce(Math.max(-120, v * 60));
                     return;
                 }
                 if (pos >= max && v > 0) {
-                    strip.scrollLeft = max;
+                    setScroll(max, false);
                     bounce(Math.min(120, v * 60));
                     return;
                 }
-                strip.scrollLeft = pos;
+                setScroll(pos, false);
                 if (Math.abs(v) < 0.02) { animRaf = null; return; }
                 animRaf = requestAnimationFrame(frame);
             });
         }
 
         // Fade title and swipe hint once the user starts exploring
-        strip.addEventListener('scroll', syncChrome, { passive: true });
+        strip.addEventListener('scroll', function () {
+            applyFocus();
+            syncChrome();
+        }, { passive: true });
 
-        // Vertical wheel/trackpad drives the strip horizontally (down → into timeline).
+        // Vertical wheel/trackpad plays the intro, then drives the strip horizontally
+        // (down → into timeline). Horizontal gestures stay native once the intro has
+        // played, except a leftward swipe at the start, which rewinds the intro.
         // On the viewport-locked homepage, capture on window so header/chrome still work.
         window.addEventListener('wheel', function (e) {
             if (e.ctrlKey) return; // leave pinch-zoom to the browser
-            if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
-            var max = maxScroll();
+            var vertical = Math.abs(e.deltaY) > Math.abs(e.deltaX);
+            var d = vertical ? e.deltaY : e.deltaX;
+            var v = virtualPos();
+            if (!vertical && introP >= 1 && !(strip.scrollLeft <= 0 && d < 0)) return;
+            var max = maxVirtual();
             if (max <= 0) return;
-            var nextScroll = Math.max(0, Math.min(max, strip.scrollLeft + e.deltaY));
-            if (nextScroll === strip.scrollLeft && !overshoot && !animRaf) return;
+            var next = Math.max(0, Math.min(max, v + d));
+            if (next === v && !overshoot && !animRaf) return;
             cancelAnimation();
-            setScroll(nextScroll, false);
+            setScroll(next, false);
             e.preventDefault();
         }, { passive: false });
+
+        // Keyboard: arrows / page keys step through the intro and the strip.
+        strip.addEventListener('keydown', function (e) {
+            var step = { ArrowDown: 80, ArrowRight: 80, ArrowUp: -80, ArrowLeft: -80,
+                PageDown: strip.clientWidth * 0.8, PageUp: -strip.clientWidth * 0.8 }[e.key];
+            if (!step) return;
+            cancelAnimation();
+            setScroll(virtualPos() + step, false);
+            e.preventDefault();
+        });
 
         // Drag-to-scroll with the mouse
         var dragging = false, dragMoved = false, startX = 0, startScroll = 0;
         strip.addEventListener('mousedown', function (e) {
             cancelAnimation();
-            setScroll(strip.scrollLeft, false);
+            setScroll(virtualPos(), false);
             dragging = true;
             dragMoved = false;
             startX = e.pageX;
-            startScroll = strip.scrollLeft;
+            startScroll = virtualPos();
             strip.classList.add('is-dragging');
         });
         window.addEventListener('mousemove', function (e) {
             if (!dragging) return;
             var dx = e.pageX - startX;
             if (Math.abs(dx) > 5) dragMoved = true;
-            strip.scrollLeft = startScroll - dx;
+            setScroll(startScroll - dx, false);
         });
         window.addEventListener('mouseup', function () {
             dragging = false;
@@ -650,7 +862,7 @@
             touchStartY = e.touches[0].pageY;
             // Fold any mid-bounce overshoot into the start so the finger
             // picks the strip up without a jump.
-            touchStartScroll = strip.scrollLeft + overshoot;
+            touchStartScroll = virtualPos() + overshoot;
             touchLastTime = 0;
             touchVelocity = 0;
         }, { passive: true });

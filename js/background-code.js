@@ -44,8 +44,8 @@
   var CONFIG = {
     FONT_SIZE_MIN: 6,
     FONT_SIZE_MAX: 10,
-    OPACITY_MIN: 0.10,
-    OPACITY_MAX: 0.18,
+    OPACITY_MIN: 0.24,
+    OPACITY_MAX: 0.40,
     FONT_FAMILY: "'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace",
     LINE_HEIGHT: 1.45,
     RADIUS_MIN: 4,
@@ -258,7 +258,7 @@
           snippet: pool[i],
           fontSize: fontSize,
           opacity: isMobile
-            ? rnd(0.10, 0.16)
+            ? rnd(0.22, 0.34)
             : CONFIG.OPACITY_MIN + depthT * (CONFIG.OPACITY_MAX - CONFIG.OPACITY_MIN),
           w: size.w,
           h: size.h,

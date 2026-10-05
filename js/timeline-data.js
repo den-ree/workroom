@@ -36,6 +36,14 @@
 //                height follows the ratio. Use with imageFit:'contain' when the
 //                asset isn't ~3:2.
 //   chip         Optional. Small media hint on the homepage node, e.g. '▶ listen'.
+//                Upcoming events: images[0] is shown as a small preview thumbnail
+//                next to the event in the homepage "coming next" list.
+//   logo         Optional. Organiser/festival logo (square image) shown as a small
+//                badge after the event line in the homepage "coming next" list,
+//                e.g. '/images/logos/ade.png'.
+//   logoFor      Optional, with logo. Word in the title the logo replaces on the
+//                homepage (e.g. 'ADE' → "21.10 - [logo] - Live Coding Sessions").
+//                /music keeps the plain-text title.
 
 window.TIMELINE_EVENTS = [
     {
@@ -51,25 +59,39 @@ window.TIMELINE_EVENTS = [
     },
     {
         type: 'live',
+        date: '2026-10-29',
+        title: 'KB - Festival Broncode',
+        kind: 'A/V Performance',
+        city: 'KB, Den Haag, NL',
+        venue: 'KB nationale bibliotheek',
+        link: 'https://www.kb.nl/agenda/broncode-taal-het-ai-tijdperk',
+        description: 'NDA/ (Niki Scheijen & Den Ree) play a Machine Music live VJ set at Festival Broncode, the opening night of the KB exhibition “Broncode: boeken in het AI-tijdperk”.',
+        badges: ['livecoding', 'ai', 'a/v'],
+    },
+    {
+        type: 'live',
         date: '2026-10-21',
         title: 'ADE - Live Coding Sessions',
         kind: 'Algorave',
         city: 'DOKA, Amsterdam, NL',
         venue: 'DOKA',
-        link: 'https://www.instagram.com/p/DcMzlwEi0C_/',
+        link: 'https://www.amsterdam-dance-event.nl/en/artists-speakers/den-ree/2861432/',
+        logo: '/images/logos/ade.png',
+        logoFor: 'ADE',
         description: 'Season-closing Algorave at Doka during ADE, with first-time guests including Den Ree.',
         badges: ['livecoding', 'algorave'],
     },
     {
         type: 'live',
         date: '2026-09-18',
-        title: 'GRAW',
+        title: 'GRAW: BOIS with Rik Mertens',
         kind: 'Performance / Installation',
         city: 'Rotterdam, NL',
         venue: 'De Achtertuin',
-        link: 'https://www.instagram.com/p/DcTreeiAs-Z',
-        description: 'Performance / installation at De Achtertuin during Groot Rotterdams Atelier Weekend — group show and COUNTERBODIES 6th edition, opening Friday.',
+        link: 'https://soundcloud.com/den-ree/bois',
+        description: 'Premiere of BOIS, a new live set with Rik Mertens, at De Achtertuin during Groot Rotterdams Atelier Weekend — group show and COUNTERBODIES 6th edition.',
         badges: ['livecoding', 'a/v'],
+        chip: '▶ listen',
     },
     {
         type: 'software',
