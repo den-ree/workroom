@@ -44,6 +44,14 @@
 //   logoFor      Optional, with logo. Word in the title the logo replaces on the
 //                homepage (e.g. 'ADE' → "21.10 - [logo] - Live Coding Sessions").
 //                /music keeps the plain-text title.
+//   time         Optional. Start time 'HH:MM' (local to the venue). Makes the
+//                "+ Calendar" invite a timed event instead of all-day.
+//   endTime      Optional. End time 'HH:MM'; earlier than time = next day.
+//                Without it, the invite lasts 2 hours.
+//   tz           Optional. IANA time zone, default 'Europe/Amsterdam'
+//                (covers NL, FR, DE, BE…; set e.g. 'Europe/London' for the UK).
+//   address      Optional. Street address for the invite / map pin, e.g.
+//                'Ketelmakerij 4, Amsterdam'. Falls back to city.
 
 window.TIMELINE_EVENTS = [
     {

@@ -69,6 +69,92 @@
         return ev.date;
     }
 
+    // '2026-10-21' → 'Wed 21 Oct 2026' (full dates only; others fall back to logDate)
+    function longDate(ev) {
+        if (!hasFullDate(ev)) return logDate(ev);
+        var p = ev.date.split('-');
+        var d = new Date(Date.UTC(+p[0], +p[1] - 1, +p[2]));
+        var DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        return DAYS[d.getUTCDay()] + ' ' + p[2] + ' ' + MONTHS[+p[1] - 1] + ' ' + p[0] +
+            (ev.time ? ' · ' + ev.time + (ev.endTime ? '–' + ev.endTime : '') : '');
+    }
+
+    // Calendar timing for an upcoming event (full dates only). With ev.time ('21:00')
+    // it is a timed event in ev.tz (default Europe/Amsterdam), ending at ev.endTime
+    // (next day if earlier than the start) or 2 h later; without it, an all-day event.
+    function calendarSpan(ev) {
+        if (!hasFullDate(ev)) return null;
+        var p = ev.date.split('-').map(Number);
+        if (!/^\d{1,2}:\d{2}$/.test(ev.time || '')) {
+            var next = new Date(Date.UTC(p[0], p[1] - 1, p[2] + 1));
+            return { allDay: true, start: ev.date.replace(/-/g, ''), end: next.toISOString().slice(0, 10).replace(/-/g, '') };
+        }
+        var tz = ev.tz || 'Europe/Amsterdam';
+        // Wall-clock time in tz → UTC (offset taken for that very date, so DST is right).
+        function toUtc(y, mo, d, hhmm) {
+            var t = hhmm.split(':').map(Number);
+            var guess = Date.UTC(y, mo, d, t[0], t[1]);
+            var parts = {};
+            new Intl.DateTimeFormat('en-US', {
+                timeZone: tz, hourCycle: 'h23', year: 'numeric', month: '2-digit',
+                day: '2-digit', hour: '2-digit', minute: '2-digit'
+            }).formatToParts(new Date(guess)).forEach(function (x) { parts[x.type] = +x.value; });
+            var asLocal = Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute);
+            return new Date(guess - (asLocal - guess));
+        }
+        var start = toUtc(p[0], p[1] - 1, p[2], ev.time);
+        var end;
+        if (/^\d{1,2}:\d{2}$/.test(ev.endTime || '')) {
+            end = toUtc(p[0], p[1] - 1, p[2], ev.endTime);
+            if (end <= start) end = toUtc(p[0], p[1] - 1, p[2] + 1, ev.endTime);
+        } else {
+            end = new Date(start.getTime() + 2 * 3600000);
+        }
+        var fmt = function (d) { return d.toISOString().replace(/[-:]/g, '').replace(/\.\d+/, ''); };
+        return { allDay: false, start: fmt(start), end: fmt(end) };
+    }
+
+    function calendarPlace(ev) {
+        return [ev.venue, ev.address || ev.city].filter(Boolean).join(', ');
+    }
+
+    // .ics as a data: URL — Apple Calendar (iOS / macOS), Outlook, most desktop apps.
+    function calendarHref(ev) {
+        var span = calendarSpan(ev);
+        if (!span) return null;
+        var esc = function (t) { return String(t || '').replace(/([\\,;])/g, '\\$1').replace(/\n/g, '\\n'); };
+        var stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '');
+        var lines = [
+            'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//denree.nl//timeline//EN',
+            'BEGIN:VEVENT',
+            'UID:' + ev.date + '-' + ev.title.replace(/\W+/g, '-').toLowerCase() + '@denree.nl',
+            'DTSTAMP:' + stamp,
+            span.allDay ? 'DTSTART;VALUE=DATE:' + span.start : 'DTSTART:' + span.start,
+            span.allDay ? 'DTEND;VALUE=DATE:' + span.end : 'DTEND:' + span.end,
+            'SUMMARY:' + esc('Den Ree — ' + ev.title),
+            'LOCATION:' + esc(calendarPlace(ev)),
+            ev.link ? 'URL:' + ev.link : '',
+            ev.description ? 'DESCRIPTION:' + esc(ev.description + (ev.link ? '\n' + ev.link : '')) : '',
+            'END:VEVENT', 'END:VCALENDAR'
+        ].filter(Boolean);
+        return 'data:text/calendar;charset=utf-8,' + encodeURIComponent(lines.join('\r\n'));
+    }
+
+    // Google Calendar "add event" link — used on Android, where .ics files don't open
+    // straight into a calendar.
+    function googleCalendarHref(ev) {
+        var span = calendarSpan(ev);
+        if (!span) return null;
+        var q = [
+            'action=TEMPLATE',
+            'text=' + encodeURIComponent('Den Ree — ' + ev.title),
+            'dates=' + span.start + '/' + span.end,
+            'location=' + encodeURIComponent(calendarPlace(ev)),
+            'details=' + encodeURIComponent([ev.description, ev.link].filter(Boolean).join('\n'))
+        ];
+        return 'https://calendar.google.com/calendar/render?' + q.join('&');
+    }
+
     function el(tag, className, text) {
         var node = document.createElement(tag);
         if (className) node.className = className;
@@ -148,6 +234,15 @@
         marker.setAttribute('aria-hidden', 'true');
         marker.appendChild(el('span', 'tl-node__cross', '+'));
         node.appendChild(marker);
+
+        if (ev._coming && ev._upnext && ev._upnext.length) {
+            // The [+] (and the title) is the coming-next control; see setupComingTap.
+            marker.removeAttribute('aria-hidden');
+            marker.setAttribute('role', 'button');
+            marker.setAttribute('tabindex', '0');
+            marker.setAttribute('aria-label', 'Show upcoming event details');
+            marker.setAttribute('aria-expanded', 'false');
+        }
 
         if (ev._coming) {
             node.appendChild(el('span', 'tl-node__title', 'coming next'));
@@ -431,6 +526,212 @@
         document.removeEventListener('keydown', onLightboxKey);
     }
 
+    /* Coming-next popover. Tapping the [+] / "coming next", or one of the listed
+       events, opens a card for that event anchored under coming-next (the timeline is locked):
+       swipe / wheel / arrow keys step between upcoming events; ×, Esc or a tap outside closes.
+       Returns { isOpen, wheel } for initUniverse's input handlers. */
+    function setupComingTap(node, upnext) {
+        var marker = node.querySelector('.tl-node__marker');
+        var title = node.querySelector(':scope > .tl-node__title');
+        var list = node.querySelector('.tl-node__upnext');
+        var universe = document.getElementById('timeline');
+        if (!marker || !list || !universe || !upnext.length) return null;
+        var n = upnext.length;
+        var idx = 0;
+        var open = false;
+        var wheelAcc = 0;
+        var lastStep = 0;
+
+        var focus = el('div', 'tl-focus');
+        focus.setAttribute('role', 'dialog');
+        focus.setAttribute('aria-modal', 'true');
+        focus.setAttribute('aria-label', 'Upcoming event');
+        focus.hidden = true;
+        var card = el('div', 'tl-focus__card');
+        card.setAttribute('aria-live', 'polite');
+        var panel = el('div', 'tl-focus__panel');
+        panel.setAttribute('tabindex', '-1');
+        panel.appendChild(card);
+        focus.appendChild(panel);
+        universe.appendChild(focus);
+
+        function button(label, extra) {
+            var b = el('a', 'nav-link tl-focus__btn' + (extra ? ' ' + extra : ''), label);
+            return b;
+        }
+
+        function render(dir) {
+            var ev = upnext[idx];
+            card.innerHTML = '';
+            card.classList.remove('is-from-left', 'is-from-right');
+            void card.offsetWidth; // restart the slide-in
+            if (dir) card.classList.add(dir > 0 ? 'is-from-right' : 'is-from-left');
+
+            var media = ev.logo || imagesOf(ev)[0];
+            if (media) {
+                var img = el('img', 'tl-focus__media' + (ev.logo ? ' tl-focus__media--logo' : ''));
+                img.src = media;
+                img.alt = ev.logo ? (ev.logoFor || '') : '';
+                card.appendChild(img);
+            }
+            card.appendChild(el('span', 'tl-focus__date', longDate(ev)));
+            card.appendChild(el('span', 'tl-focus__title', ev.title));
+            // Skip the venue when the city line already names it ('DOKA, Amsterdam' / 'KB, Den Haag').
+            var place = ev.city ? ev.city.split(',')[0].trim() : '';
+            var venueShown = ev.venue && !(place && (ev.venue.indexOf(place) === 0 || place.indexOf(ev.venue) === 0));
+            var meta = [ev.kind, venueShown ? ev.venue : null, ev.city].filter(Boolean).join(' · ');
+            if (meta) card.appendChild(el('span', 'tl-focus__meta', meta));
+            var desc = ev.tentative ? 'To be confirmed — more details soon.' : ev.description;
+            if (desc) card.appendChild(el('span', 'tl-focus__desc', desc));
+
+            var actions = el('div', 'tl-focus__actions');
+            if (ev.link) {
+                var go = button('Event page ↗', 'nav-link--lit');
+                go.href = ev.link;
+                if (/^https?:/.test(ev.link)) { go.target = '_blank'; go.rel = 'noopener noreferrer'; }
+                actions.appendChild(go);
+            }
+            // Android → Google Calendar link; everything else → .ics (Apple / Outlook).
+            var android = /Android/i.test(navigator.userAgent);
+            var cal = android ? googleCalendarHref(ev) : calendarHref(ev);
+            if (cal) {
+                var add = button('+ Calendar');
+                add.href = cal;
+                if (android) { add.target = '_blank'; add.rel = 'noopener noreferrer'; }
+                else add.download = 'den-ree-' + ev.date + '.ics';
+                actions.appendChild(add);
+            }
+            if (n > 1) {
+                var nav = el('span', 'tl-focus__nav');
+                [['‹', -1, 'Previous event'], ['›', 1, 'Next event']].forEach(function (b) {
+                    var btn = el('button', 'nav-link nav-link--icon', b[0]);
+                    btn.type = 'button';
+                    btn.setAttribute('aria-label', b[2]);
+                    btn.addEventListener('click', function () { step(b[1]); });
+                    nav.appendChild(btn);
+                });
+                actions.appendChild(nav);
+            }
+            card.appendChild(actions);
+        }
+
+        // Anchor the card under coming-next: arrow at the [+], clamped to the screen
+        // edges, and never taller than the space left below it.
+        var GAP = 14, EDGE = 16;
+        function place() {
+            if (!open) return;
+            var u = universe.getBoundingClientRect();
+            var m = marker.getBoundingClientRect();
+            var below = (title || marker).getBoundingClientRect().bottom;
+            var w = panel.offsetWidth;
+            var ax = m.left + m.width / 2 - u.left;
+            var left = Math.max(EDGE, Math.min(u.width - EDGE - w, ax - w / 2));
+            var top = below - u.top + GAP;
+            panel.style.left = Math.round(left) + 'px';
+            panel.style.top = Math.round(top) + 'px';
+            panel.style.maxHeight = Math.round(u.height - top - EDGE) + 'px';
+            panel.style.setProperty('--arrow-x', Math.round(Math.max(20, Math.min(w - 20, ax - left))) + 'px');
+        }
+        window.addEventListener('resize', place);
+
+        function step(dir) {
+            if (n < 2) return;
+            idx = (idx + dir + n) % n;
+            lastStep = performance.now();
+            render(dir);
+        }
+
+        function setOpen(next, at) {
+            open = next;
+            if (open && typeof at === 'number') idx = at;
+            focus.hidden = !open;
+            document.body.classList.toggle('is-coming-open', open);
+            marker.setAttribute('aria-expanded', String(open));
+            if (open) {
+                render(0);
+                place();
+                panel.focus({ preventScroll: true });
+            } else {
+                marker.focus({ preventScroll: true });
+            }
+        }
+
+        // [+] and the title open the first event; a listed event opens itself.
+        [marker, title].forEach(function (t) {
+            if (!t) return;
+            t.addEventListener('click', function (e) {
+                e.preventDefault();
+                setOpen(true, 0);
+            });
+        });
+        Array.prototype.forEach.call(list.children, function (row, i) {
+            row.addEventListener('click', function (e) {
+                e.preventDefault();
+                setOpen(true, i);
+            });
+        });
+        marker.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                e.stopPropagation();
+                setOpen(true, 0);
+            }
+        });
+        document.addEventListener('keydown', function (e) {
+            if (!open) return;
+            if (e.key === 'Escape') setOpen(false);
+            else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); step(1); }
+            else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); step(-1); }
+        });
+
+        // Swipe (touch) or drag (mouse) on the focus view steps between events.
+        var sx = 0, sy = 0, tracking = false, swiped = false;
+        function startSwipe(x, y) { sx = x; sy = y; tracking = true; swiped = false; }
+        function endSwipe(x, y) {
+            if (!tracking) return;
+            tracking = false;
+            var dx = x - sx, dy = y - sy;
+            var d = Math.abs(dx) >= Math.abs(dy) ? dx : dy;
+            if (Math.abs(d) > 40) { swiped = true; step(d < 0 ? 1 : -1); }
+        }
+        // A tap on the dimmed backdrop (not the end of a swipe) closes the pop-up.
+        focus.addEventListener('click', function (e) {
+            if (e.target === focus && !swiped) setOpen(false);
+            swiped = false;
+        });
+        focus.addEventListener('touchstart', function (e) {
+            if (e.touches.length === 1) startSwipe(e.touches[0].clientX, e.touches[0].clientY);
+        }, { passive: true });
+        focus.addEventListener('touchmove', function (e) {
+            // Let a long description scroll; otherwise keep the page still.
+            if (!e.target.closest('.tl-focus__desc')) e.preventDefault();
+        }, { passive: false });
+        focus.addEventListener('touchend', function (e) {
+            var t = e.changedTouches && e.changedTouches[0];
+            if (t) endSwipe(t.clientX, t.clientY);
+        }, { passive: true });
+        focus.addEventListener('mousedown', function (e) {
+            if (!e.target.closest('a, button')) startSwipe(e.clientX, e.clientY);
+        });
+        window.addEventListener('mouseup', function (e) { endSwipe(e.clientX, e.clientY); });
+
+        return {
+            isOpen: function () { return open; },
+            // Wheel / trackpad: one event per gesture-sized push, not per pixel.
+            wheel: function (e) {
+                if (e.target.closest && e.target.closest('.tl-focus__desc')) return;
+                e.preventDefault();
+                var d = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+                wheelAcc += d;
+                if (performance.now() - lastStep < 450) { wheelAcc = 0; return; }
+                if (Math.abs(wheelAcc) > 60) {
+                    step(wheelAcc > 0 ? 1 : -1);
+                    wheelAcc = 0;
+                }
+            }
+        };
+    }
+
     function initUniverse() {
         var strip = document.getElementById('timelineStrip');
         var canvas = document.getElementById('tlCanvas');
@@ -454,6 +755,7 @@
         var nodes = universeEvents.map(buildNode);
         nodes.forEach(function (n) { canvas.appendChild(n); });
         var stacks = nodes.map(function (n) { return n.querySelector('.tl-node__mediastack'); });
+        var coming = head ? setupComingTap(nodes[0], upnext) : null;
 
         var homeScroll = 0;
         var titleFadeAt = HINT_FADE;
@@ -503,6 +805,15 @@
                 // around the marker centre so the line endpoint stays put.
                 var scale = introScale + (1 - introScale) * e;
                 nodes[0].style.transform = scale !== 1 ? 'scale(' + scale.toFixed(4) + ')' : '';
+
+                // The event list fades out as it docks: only [+] and the title stay,
+                // so nothing overlaps the first timeline event.
+                var list = nodes[0].querySelector('.tl-node__upnext');
+                if (list) {
+                    var lo = Math.max(0, 1 - e * 3);
+                    list.style.opacity = lo < 1 ? lo.toFixed(3) : '';
+                    list.style.visibility = lo <= 0 ? 'hidden' : '';
+                }
 
                 // Title drifts up and fades out over the first part of the intro.
                 var title = document.getElementById('universeTitle');
@@ -797,6 +1108,7 @@
         // On the viewport-locked homepage, capture on window so header/chrome still work.
         window.addEventListener('wheel', function (e) {
             if (e.ctrlKey) return; // leave pinch-zoom to the browser
+            if (coming && coming.isOpen()) { coming.wheel(e); return; }
             var vertical = Math.abs(e.deltaY) > Math.abs(e.deltaX);
             var d = vertical ? e.deltaY : e.deltaX;
             var v = virtualPos();
@@ -812,6 +1124,7 @@
 
         // Keyboard: arrows / page keys step through the intro and the strip.
         strip.addEventListener('keydown', function (e) {
+            if (coming && coming.isOpen()) return;
             var step = { ArrowDown: 80, ArrowRight: 80, ArrowUp: -80, ArrowLeft: -80,
                 PageDown: strip.clientWidth * 0.8, PageUp: -strip.clientWidth * 0.8 }[e.key];
             if (!step) return;
@@ -919,6 +1232,7 @@
         strip.addEventListener('click', function (e) {
             if (dragMoved) {
                 e.preventDefault();
+                e.stopPropagation(); // a drag must not also tap the coming-next control
                 dragMoved = false;
                 return;
             }
