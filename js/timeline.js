@@ -215,13 +215,8 @@
         var node = el(isLink ? 'a' : 'div', 'tl-node tl-node--' + (ev._coming ? 'live' : ev.type));
         var imp = importanceOf(ev);
         if (imp !== 'normal') node.classList.add('tl-node--' + imp);
-        if (isLink) {
-            node.href = ev.link;
-            if (/^https?:/.test(ev.link)) {
-                node.target = '_blank';
-                node.rel = 'noopener noreferrer';
-            }
-        }
+        // Same tab, so the browser's back button returns to the timeline.
+        if (isLink) node.href = ev.link;
         if (isUpcoming(ev) && !ev._coming) {
             node.classList.add('tl-node--upcoming');
             node.appendChild(el('span', 'tl-node__flag', 'upcoming'));
@@ -253,13 +248,7 @@
                         (item.tentative ? ' tl-node__upnext-item--tentative' : '') +
                         (item.link ? ' tl-node__upnext-item--link' : ''));
                     var coords = el(item.link ? 'a' : 'span', 'tl-node__upnext-coords');
-                    if (item.link) {
-                        coords.href = item.link;
-                        if (/^https?:/.test(item.link)) {
-                            coords.target = '_blank';
-                            coords.rel = 'noopener noreferrer';
-                        }
-                    }
+                    if (item.link) coords.href = item.link;
                     var preview = imagesOf(item)[0];
                     if (preview) {
                         row.classList.add('tl-node__upnext-item--preview');
@@ -588,7 +577,6 @@
             if (ev.link) {
                 var go = button('Event page ↗', 'nav-link--lit');
                 go.href = ev.link;
-                if (/^https?:/.test(ev.link)) { go.target = '_blank'; go.rel = 'noopener noreferrer'; }
                 actions.appendChild(go);
             }
             // Android → Google Calendar link; everything else → .ics (Apple / Outlook).
