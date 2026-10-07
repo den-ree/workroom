@@ -34,6 +34,11 @@ jobs:
           cp robots.txt sitemap.xml _site/ 2>/dev/null || true
           [ -f CNAME ] && cp CNAME _site/ || true
 
+      - name: Build calendar invites
+        # One .ics per dated event for the homepage "+ Calendar" button (iOS Safari
+        # only adds invites from a real .ics URL). See scripts/build-calendar.js.
+        run: node scripts/build-calendar.js _site
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 

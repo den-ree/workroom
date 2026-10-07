@@ -30,6 +30,7 @@ node_modules/
 karrik_fonts-main/
 
 # Build outputs
+/calendar/
 dist/
 build/
 *.min.js
