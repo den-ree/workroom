@@ -468,7 +468,8 @@ code {
 }
 
 .nav-link:active,
-.nav-link.active {
+.nav-link.active,
+.nav-link--lit {
     color: #fff;
     text-decoration: none;
     opacity: 1;
@@ -482,6 +483,16 @@ code {
     text-shadow:
         0 0 6px rgba(190, 215, 255, 0.9),
         0 -1px 0 rgba(20, 50, 130, 0.5);
+}
+
+/* Square key for a single glyph (× ‹ ›) */
+.nav-link--icon {
+    min-width: 2.1rem;
+    width: 2.1rem;
+    padding: 0;
+    font-size: 1rem;
+    letter-spacing: 0;
+    cursor: pointer;
 }
 
 /* Active key LED, like a lit keypad indicator */
@@ -1514,15 +1525,16 @@ body.page-universe main {
        --edge-l / --edge-r are driven from js/timeline.js (applyFocus). */
     --edge-l: 1;
     --edge-r: 0.12;
+    --edge-w: 12%;  /* width of each side fade; thinner on phones */
     -webkit-mask-image: linear-gradient(to right,
         rgba(0, 0, 0, var(--edge-l)) 0%,
-        #000 26%,
-        #000 74%,
+        #000 var(--edge-w),
+        #000 calc(100% - var(--edge-w)),
         rgba(0, 0, 0, var(--edge-r)) 100%);
     mask-image: linear-gradient(to right,
         rgba(0, 0, 0, var(--edge-l)) 0%,
-        #000 26%,
-        #000 74%,
+        #000 var(--edge-w),
+        #000 calc(100% - var(--edge-w)),
         rgba(0, 0, 0, var(--edge-r)) 100%);
 }
 
@@ -1624,6 +1636,188 @@ body.page-universe main {
     pointer-events: auto;
 }
 
+/* ---- Coming-next popover (setupComingTap in js/timeline.js) ----
+   A frosted card anchored under coming-next, arrow pointing at the [+]. Other timeline
+   events fade back; JS caps the card height so the buttons always stay on screen. */
+.universe-strip,
+.universe-title,
+.universe-hint,
+.universe-credit {
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+body.is-coming-open .tl-node:not(.tl-node--coming),
+body.is-coming-open .timeline-lines {
+    opacity: 0.15 !important;
+    transition: opacity 0.25s ease;
+}
+
+/* The card replaces the list; the [+] turns into × while it is open */
+body.is-coming-open .tl-node--coming .tl-node__upnext {
+    visibility: hidden;
+}
+
+body.is-coming-open .tl-node--coming .tl-node__cross {
+    transform: translate(-50%, -52%) rotate(45deg);
+}
+
+body.is-coming-open .universe-hint,
+body.is-coming-open .universe-credit {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none;
+}
+
+.tl-focus {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    touch-action: none; /* timeline stays locked; swipes step events */
+}
+
+.tl-focus__panel {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    width: min(34rem, calc(100% - 32px));
+    padding: 1.15rem 1.25rem 1.15rem;
+    background: linear-gradient(to bottom, rgba(244, 246, 250, 0.9) 0%, rgba(226, 231, 239, 0.9) 100%);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(40, 55, 90, 0.18);
+    border-radius: 16px;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        0 18px 50px rgba(20, 40, 90, 0.22),
+        0 4px 12px rgba(20, 40, 90, 0.12);
+    cursor: grab;
+    animation: tl-focus-pop 0.22s ease-out;
+}
+
+@keyframes tl-focus-pop {
+    from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+    to { opacity: 1; transform: none; }
+}
+
+/* Arrow pointing up at the [+] (--arrow-x set from JS) */
+.tl-focus__panel::before {
+    content: '';
+    position: absolute;
+    top: -7px;
+    left: var(--arrow-x, 50%);
+    width: 12px;
+    height: 12px;
+    background: rgba(244, 246, 250, 0.95);
+    border-left: 1px solid rgba(40, 55, 90, 0.18);
+    border-top: 1px solid rgba(40, 55, 90, 0.18);
+    transform: translateX(-50%) rotate(45deg);
+}
+
+.tl-focus[hidden] {
+    display: none;
+}
+
+.tl-focus__card {
+    width: 100%;
+}
+
+.tl-focus__panel:focus {
+    outline: none;
+}
+
+.tl-focus__card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-height: 0;
+    flex: 0 1 auto;
+    cursor: auto;
+}
+
+.tl-focus__card.is-from-right { animation: tl-focus-in-right 0.28s ease-out; }
+.tl-focus__card.is-from-left { animation: tl-focus-in-left 0.28s ease-out; }
+
+@keyframes tl-focus-in-right {
+    from { opacity: 0; transform: translateX(18px); }
+    to { opacity: 1; transform: none; }
+}
+
+@keyframes tl-focus-in-left {
+    from { opacity: 0; transform: translateX(-18px); }
+    to { opacity: 1; transform: none; }
+}
+
+.tl-focus__media {
+    flex: none;
+    width: 100%;
+    max-height: 24vh;
+    object-fit: cover;
+    border-radius: 6px;
+    box-shadow: 0 10px 28px rgba(20, 40, 90, 0.16);
+}
+
+.tl-focus__media--logo {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.14);
+}
+
+.tl-focus__date {
+    flex: none;
+    margin-top: 0.25rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #4785F4;
+}
+
+.tl-focus__title {
+    flex: none;
+    font-size: clamp(1.5rem, 4.5vw, 2rem);
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.tl-focus__meta {
+    flex: none;
+    font-size: 0.95rem;
+    color: #444;
+}
+
+/* Only the description scrolls if the screen is short; buttons stay put */
+.tl-focus__desc {
+    flex: 0 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    margin-top: 0.25rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #222;
+    touch-action: pan-y;
+}
+
+.tl-focus__actions {
+    flex: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+    padding-top: 0.9rem;
+}
+
+.tl-focus__nav {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-left: auto;
+}
+
+.tl-focus .nav-link--lit {
+    color: #fff;
+}
+
 .universe-credit a {
     color: #555;
     text-decoration: underline;
@@ -1685,7 +1879,7 @@ a.tl-node:hover {
 .tl-node--upcoming { --node-color: #111; }
 
 .tl-node--coming {
-    width: auto;
+    width: 320px;
     max-width: 340px;
     display: flex;
     flex-direction: column;
@@ -1735,21 +1929,11 @@ a.tl-node:hover {
     left: 0;
 }
 
-/* Quiet upcoming list — ink hierarchy, no greens */
-.tl-node__upnext-item--n0 {
+/* Upcoming list — every event in the same ink (a fade read as "more to scroll") */
+.tl-node__upnext-item,
+.tl-node__upnext-item::before {
     color: rgba(17, 17, 17, 0.92);
 }
-.tl-node__upnext-item--n0::before { color: rgba(17, 17, 17, 0.92); }
-
-.tl-node__upnext-item--n1 {
-    color: rgba(17, 17, 17, 0.58);
-}
-.tl-node__upnext-item--n1::before { color: rgba(17, 17, 17, 0.58); }
-
-.tl-node__upnext-item--n2 {
-    color: rgba(17, 17, 17, 0.34);
-}
-.tl-node__upnext-item--n2::before { color: rgba(17, 17, 17, 0.34); }
 
 .tl-node__upnext-coords {
     color: inherit;
@@ -1824,9 +2008,6 @@ a.tl-node__upnext-coords:focus-visible .tl-node__upnext-line {
     margin: 0 0.1em;
 }
 
-.tl-node__upnext-item--n1 .tl-node__upnext-thumb { opacity: 0.75; }
-.tl-node__upnext-item--n2 .tl-node__upnext-thumb { opacity: 0.5; }
-
 a.tl-node__upnext-coords:hover .tl-node__upnext-thumb,
 a.tl-node__upnext-coords:focus-visible .tl-node__upnext-thumb {
     transform: translateY(-2px);
@@ -1836,7 +2017,9 @@ a.tl-node__upnext-coords:focus-visible .tl-node__upnext-thumb {
 }
 
 .tl-node__upnext-meta {
-    opacity: 0.72;
+    margin-top: 0.1em;
+    font-size: 0.8em;
+    opacity: 0.6;
 }
 
 .tl-node__upnext-hope {
@@ -1870,6 +2053,31 @@ a.tl-node__upnext-coords:focus-visible .tl-node__upnext-thumb {
     0%, 100% { transform: translateX(0); }
     50% { transform: translateX(1px); }
 }
+
+/* ---- Coming-next tap (see setupComingTap in js/timeline.js) ---- */
+.tl-node--coming .tl-node__marker[role="button"],
+.tl-node--coming:has(.tl-node__marker[role="button"]) > .tl-node__title,
+.tl-node--coming .tl-node__upnext-item {
+    cursor: pointer;
+}
+
+/* Bigger invisible hit area around the small [+] */
+.tl-node--coming .tl-node__marker[role="button"] .tl-node__cross {
+    padding: 14px;
+    transition: transform 0.25s ease;
+}
+
+.tl-node--coming .tl-node__marker[role="button"]:focus-visible {
+    outline: 2px solid #4785F4;
+    outline-offset: 6px;
+    border-radius: 2px;
+}
+
+.tl-node--coming .tl-node__marker[role="button"]:hover {
+    background: rgba(71, 133, 244, 0.1);
+}
+
+
 
 .tl-node__marker {
     position: relative;
@@ -2198,7 +2406,12 @@ a.tl-node:hover .tl-node__media:nth-child(1),
         --media-h: 80px;
     }
 
+    .universe-strip {
+        --edge-w: 6%;
+    }
+
     .tl-node--coming {
+        width: 250px;
         max-width: 250px;
     }
 
