@@ -1637,7 +1637,7 @@ body.page-universe main {
 }
 
 /* ---- Coming-next popover (setupComingTap in js/timeline.js) ----
-   A frosted card anchored under coming-next, arrow pointing at the [+]. Other timeline
+   A frosted card anchored under coming-next. Other timeline
    events fade back; JS caps the card height so the buttons always stay on screen. */
 .universe-strip,
 .universe-title,
@@ -1699,20 +1699,6 @@ body.is-coming-open .universe-credit {
     to { opacity: 1; transform: none; }
 }
 
-/* Arrow pointing up at the [+] (--arrow-x set from JS) */
-.tl-focus__panel::before {
-    content: '';
-    position: absolute;
-    top: -7px;
-    left: var(--arrow-x, 50%);
-    width: 12px;
-    height: 12px;
-    background: rgba(244, 246, 250, 0.95);
-    border-left: 1px solid rgba(40, 55, 90, 0.18);
-    border-top: 1px solid rgba(40, 55, 90, 0.18);
-    transform: translateX(-50%) rotate(45deg);
-}
-
 .tl-focus[hidden] {
     display: none;
 }
@@ -1723,6 +1709,16 @@ body.is-coming-open .universe-credit {
 
 .tl-focus__panel:focus {
     outline: none;
+}
+
+/* Phones: the card reaches the bottom edge; buttons sit at its bottom and a long
+   description scrolls in between (height set in place()). */
+.tl-focus__panel--fill .tl-focus__card {
+    flex: 1 1 auto;
+}
+
+.tl-focus__panel--fill .tl-focus__actions {
+    margin-top: auto;
 }
 
 .tl-focus__card {

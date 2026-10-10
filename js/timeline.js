@@ -527,9 +527,11 @@
             card.appendChild(actions);
         }
 
-        // Anchor the card under coming-next: arrow at the [+], clamped to the screen
-        // edges, and never taller than the space left below it.
+        // Anchor the card under coming-next, centred on the [+], clamped to the screen
+        // edges, and never taller than the space left below it. On phones it always
+        // reaches down to the bottom edge, with the buttons at the bottom.
         var GAP = 14, EDGE = 16;
+        var phone = window.matchMedia('(max-width: 768px)');
         function place() {
             if (!open) return;
             var u = universe.getBoundingClientRect();
@@ -541,8 +543,10 @@
             var top = below - u.top + GAP;
             panel.style.left = Math.round(left) + 'px';
             panel.style.top = Math.round(top) + 'px';
-            panel.style.maxHeight = Math.round(u.height - top - EDGE) + 'px';
-            panel.style.setProperty('--arrow-x', Math.round(Math.max(20, Math.min(w - 20, ax - left))) + 'px');
+            var room = Math.round(u.height - top - EDGE) + 'px';
+            panel.style.maxHeight = room;
+            panel.style.height = phone.matches ? room : '';
+            panel.classList.toggle('tl-focus__panel--fill', phone.matches);
         }
         window.addEventListener('resize', place);
 
