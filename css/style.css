@@ -1711,6 +1711,16 @@ body.is-coming-open .universe-credit {
     outline: none;
 }
 
+/* Phones: the card reaches the bottom edge; buttons sit at its bottom and a long
+   description scrolls in between (height set in place()). */
+.tl-focus__panel--fill .tl-focus__card {
+    flex: 1 1 auto;
+}
+
+.tl-focus__panel--fill .tl-focus__actions {
+    margin-top: auto;
+}
+
 .tl-focus__card {
     display: flex;
     flex-direction: column;
