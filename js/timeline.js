@@ -969,34 +969,30 @@
         // (down → into timeline). Horizontal gestures stay native once the intro has
         // played, except a leftward swipe at the start, which rewinds the intro.
         // On the viewport-locked homepage, capture on window so header/chrome still work.
-        // Dock detent: one trackpad swipe (and its momentum) can't carry past the point
-        // where coming-next has docked — it stops there, and the next swipe continues.
-        // A new gesture = a pause of WHEEL_GESTURE_GAP ms between wheel events.
-        var WHEEL_GESTURE_GAP = 200;
-        var lastWheelAt = 0;
-        var wheelHeld = false;
+        // Wheel / trackpad is slowed down until the first event is centred, so one
+        // full swipe plays the intro and arrives at the first event instead of flying
+        // past it. Past it, speed ramps back to normal over WHEEL_RAMP px.
+        var WHEEL_SLOW = 0.25;
+        var WHEEL_RAMP = 400;
+
+        function firstEventStop() {
+            var i = head ? 1 : 0;
+            if (i >= nodes.length) return introDist;
+            return introDist + Math.max(0, nodeCenters[i] - strip.clientWidth * FOCUS_AT);
+        }
 
         window.addEventListener('wheel', function (e) {
             if (e.ctrlKey) return; // leave pinch-zoom to the browser
             if (coming && coming.isOpen()) { coming.wheel(e); return; }
-            var now = performance.now();
-            var newGesture = now - lastWheelAt > WHEEL_GESTURE_GAP;
-            lastWheelAt = now;
-            if (wheelHeld) {
-                if (!newGesture) { e.preventDefault(); return; }
-                wheelHeld = false;
-            }
             var vertical = Math.abs(e.deltaY) > Math.abs(e.deltaX);
             var d = vertical ? e.deltaY : e.deltaX;
             var v = virtualPos();
             if (!vertical && introP >= 1 && !(strip.scrollLeft <= 0 && d < 0)) return;
             var max = maxVirtual();
             if (max <= 0) return;
+            var past = v - firstEventStop();
+            d *= past <= 0 ? WHEEL_SLOW : Math.min(1, WHEEL_SLOW + (1 - WHEEL_SLOW) * past / WHEEL_RAMP);
             var next = Math.max(0, Math.min(max, v + d));
-            if (introDist && ((v < introDist && next >= introDist) || (v > introDist && next <= introDist))) {
-                next = introDist;
-                wheelHeld = true;
-            }
             if (next === v && !overshoot && !animRaf) return;
             cancelAnimation();
             setScroll(next, false);
