@@ -972,7 +972,7 @@
         // Wheel / trackpad is slowed down until the first event is centred, so one
         // full swipe plays the intro and arrives at the first event instead of flying
         // past it. Past it, speed ramps back to normal over WHEEL_RAMP px.
-        var WHEEL_SLOW = 0.25;
+        var WHEEL_SLOW = 0.5;
         var WHEEL_RAMP = 400;
 
         function firstEventStop() {
