@@ -264,7 +264,7 @@
     // Upcoming events stay off the strip — they only feed the NEXT list /music.
     var TITLE_TO_COMING = 18; // px gap under the title before the "up" band
     var DOWN_BAND_SHARE = 0.22; // fraction of strip height from up → down band
-    var FOCUS_GUTTER = 96; // space between coming-next and the latest past event
+    var FOCUS_GUTTER = 160; // space between coming-next and the latest past event
     var FOCUS_GUTTER_NARROW = 16;
     var NARROW = 700;
     var HINT_FADE = 40;
@@ -959,55 +959,6 @@
             });
         }
 
-        // Momentum ran into an edge: swell to a resisted peak, then spring home.
-        function bounce(peak) {
-            cancelAnimation();
-            var t0 = performance.now();
-            var OUT = 100, BACK = 250;
-            animRaf = requestAnimationFrame(function frame(now) {
-                var elapsed = now - t0;
-                if (elapsed < OUT) {
-                    overshoot = peak * (elapsed / OUT);
-                } else if (elapsed < OUT + BACK) {
-                    overshoot = peak * Math.pow(1 - (elapsed - OUT) / BACK, 3);
-                } else {
-                    overshoot = 0;
-                    render();
-                    animRaf = null;
-                    return;
-                }
-                render();
-                animRaf = requestAnimationFrame(frame);
-            });
-        }
-
-        // Free glide after a flick (velocity in scrollLeft px/ms).
-        function startGlide(v) {
-            cancelAnimation();
-            var pos = virtualPos();
-            var last = performance.now();
-            animRaf = requestAnimationFrame(function frame(now) {
-                var dt = Math.min(50, Math.max(1, now - last));
-                last = now;
-                pos += v * dt;
-                v *= Math.pow(0.95, dt / 16);
-                var max = maxVirtual();
-                if (pos <= 0 && v < 0) {
-                    setScroll(0, false);
-                    bounce(Math.max(-120, v * 60));
-                    return;
-                }
-                if (pos >= max && v > 0) {
-                    setScroll(max, false);
-                    bounce(Math.min(120, v * 60));
-                    return;
-                }
-                setScroll(pos, false);
-                if (Math.abs(v) < 0.02) { animRaf = null; return; }
-                animRaf = requestAnimationFrame(frame);
-            });
-        }
-
         // Fade title and swipe hint once the user starts exploring
         strip.addEventListener('scroll', function () {
             applyFocus();
@@ -1018,6 +969,18 @@
         // (down → into timeline). Horizontal gestures stay native once the intro has
         // played, except a leftward swipe at the start, which rewinds the intro.
         // On the viewport-locked homepage, capture on window so header/chrome still work.
+        // Wheel / trackpad is slowed down until the first event is centred, so one
+        // full swipe plays the intro and arrives at the first event instead of flying
+        // past it. Past it, speed ramps back to normal over WHEEL_RAMP px.
+        var WHEEL_SLOW = 0.5;
+        var WHEEL_RAMP = 400;
+
+        function firstEventStop() {
+            var i = head ? 1 : 0;
+            if (i >= nodes.length) return introDist;
+            return introDist + Math.max(0, nodeCenters[i] - strip.clientWidth * FOCUS_AT);
+        }
+
         window.addEventListener('wheel', function (e) {
             if (e.ctrlKey) return; // leave pinch-zoom to the browser
             if (coming && coming.isOpen()) { coming.wheel(e); return; }
@@ -1027,6 +990,8 @@
             if (!vertical && introP >= 1 && !(strip.scrollLeft <= 0 && d < 0)) return;
             var max = maxVirtual();
             if (max <= 0) return;
+            var past = v - firstEventStop();
+            d *= past <= 0 ? WHEEL_SLOW : Math.min(1, WHEEL_SLOW + (1 - WHEEL_SLOW) * past / WHEEL_RAMP);
             var next = Math.max(0, Math.min(max, v + d));
             if (next === v && !overshoot && !animRaf) return;
             cancelAnimation();
@@ -1118,18 +1083,59 @@
             setScroll(touchStartScroll - delta, true);
             e.preventDefault();
         }, { passive: false });
+        // Touch snapping: a swipe moves one stop (next / previous event, centred on the
+        // focus line); a short drag settles on the nearest stop. Stop 0 is the intro
+        // start (coming-next centred); stop k is event k centred.
+        function snapStops() {
+            var w = strip.clientWidth;
+            var stops = head ? [0] : [];
+            for (var i = head ? 1 : 0; i < nodes.length; i++) {
+                stops.push(introDist + Math.max(0, nodeCenters[i] - w * FOCUS_AT));
+            }
+            var max = maxVirtual();
+            return stops.map(function (v) { return Math.min(max, v); });
+        }
+
+        function nearestStop(stops, v) {
+            var best = 0;
+            stops.forEach(function (s, i) {
+                if (Math.abs(s - v) < Math.abs(stops[best] - v)) best = i;
+            });
+            return best;
+        }
+
+        function animateTo(target) {
+            cancelAnimation();
+            var from = virtualPos();
+            if (reduceMotion || Math.abs(target - from) < 1) { setScroll(target, false); return; }
+            var t0 = performance.now();
+            var DURATION = Math.min(520, 260 + Math.abs(target - from) * 0.4);
+            animRaf = requestAnimationFrame(function frame(now) {
+                var t = Math.min(1, (now - t0) / DURATION);
+                setScroll(from + (target - from) * (1 - Math.pow(1 - t, 3)), false);
+                animRaf = t < 1 ? requestAnimationFrame(frame) : null;
+            });
+        }
+
         function touchRelease(e) {
             if (!touchDragging) return;
             touchDragging = false;
+            var moved = touchAxis !== null; // a plain tap must not snap
             touchAxis = null;
-            // A finger that rested before lifting shouldn't fling.
+            if (overshoot) { springBack(); return; }
+            if (!moved) return;
+            // A finger that rested before lifting shouldn't count as a flick.
             var stale = !touchLastTime ||
                 ((e.timeStamp || performance.now()) - touchLastTime) > 80;
-            if (overshoot) {
-                springBack();
-            } else if (!stale && !reduceMotion && Math.abs(touchVelocity) > 0.3) {
-                startGlide(touchVelocity);
-            }
+            var v = stale ? 0 : touchVelocity;
+            var travel = virtualPos() - touchStartScroll;
+            var stops = snapStops();
+            if (!stops.length) return;
+            var from = nearestStop(stops, touchStartScroll);
+            var dir = Math.abs(v) > 0.3 ? Math.sign(v) : (Math.abs(travel) > 40 ? Math.sign(travel) : 0);
+            var to = dir ? Math.max(0, Math.min(stops.length - 1, from + dir))
+                         : nearestStop(stops, virtualPos());
+            animateTo(stops[to]);
         }
         strip.addEventListener('touchend', touchRelease, { passive: true });
         strip.addEventListener('touchcancel', touchRelease, { passive: true });
