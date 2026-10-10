@@ -527,7 +527,7 @@
             card.appendChild(actions);
         }
 
-        // Anchor the card under coming-next: arrow at the [+], clamped to the screen
+        // Anchor the card under coming-next, centred on the [+], clamped to the screen
         // edges, and never taller than the space left below it.
         var GAP = 14, EDGE = 16;
         function place() {
@@ -542,7 +542,6 @@
             panel.style.left = Math.round(left) + 'px';
             panel.style.top = Math.round(top) + 'px';
             panel.style.maxHeight = Math.round(u.height - top - EDGE) + 'px';
-            panel.style.setProperty('--arrow-x', Math.round(Math.max(20, Math.min(w - 20, ax - left))) + 'px');
         }
         window.addEventListener('resize', place);
 
