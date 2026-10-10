@@ -264,7 +264,7 @@
     // Upcoming events stay off the strip — they only feed the NEXT list /music.
     var TITLE_TO_COMING = 18; // px gap under the title before the "up" band
     var DOWN_BAND_SHARE = 0.22; // fraction of strip height from up → down band
-    var FOCUS_GUTTER = 96; // space between coming-next and the latest past event
+    var FOCUS_GUTTER = 160; // space between coming-next and the latest past event
     var FOCUS_GUTTER_NARROW = 16;
     var NARROW = 700;
     var HINT_FADE = 40;
@@ -969,9 +969,23 @@
         // (down → into timeline). Horizontal gestures stay native once the intro has
         // played, except a leftward swipe at the start, which rewinds the intro.
         // On the viewport-locked homepage, capture on window so header/chrome still work.
+        // Dock detent: one trackpad swipe (and its momentum) can't carry past the point
+        // where coming-next has docked — it stops there, and the next swipe continues.
+        // A new gesture = a pause of WHEEL_GESTURE_GAP ms between wheel events.
+        var WHEEL_GESTURE_GAP = 200;
+        var lastWheelAt = 0;
+        var wheelHeld = false;
+
         window.addEventListener('wheel', function (e) {
             if (e.ctrlKey) return; // leave pinch-zoom to the browser
             if (coming && coming.isOpen()) { coming.wheel(e); return; }
+            var now = performance.now();
+            var newGesture = now - lastWheelAt > WHEEL_GESTURE_GAP;
+            lastWheelAt = now;
+            if (wheelHeld) {
+                if (!newGesture) { e.preventDefault(); return; }
+                wheelHeld = false;
+            }
             var vertical = Math.abs(e.deltaY) > Math.abs(e.deltaX);
             var d = vertical ? e.deltaY : e.deltaX;
             var v = virtualPos();
@@ -979,6 +993,10 @@
             var max = maxVirtual();
             if (max <= 0) return;
             var next = Math.max(0, Math.min(max, v + d));
+            if (introDist && ((v < introDist && next >= introDist) || (v > introDist && next <= introDist))) {
+                next = introDist;
+                wheelHeld = true;
+            }
             if (next === v && !overshoot && !animRaf) return;
             cancelAnimation();
             setScroll(next, false);
