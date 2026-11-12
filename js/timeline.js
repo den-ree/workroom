@@ -86,6 +86,121 @@
         return node;
     }
 
+    // Performance, app, session, and release icons by Delapouite, CC BY 3.0.
+    // Location mark by Spencer Dub, CC BY 3.0.
+    // https://game-icons.net — background square removed, shape kept.
+    // Note icon from Lucide, https://lucide.dev (ISC).
+    // Copyright (c) Lucide Contributors. Feather portions Copyright (c) Cole Bemis.
+    // Permission to use, copy, modify, and/or distribute for any purpose with or
+    // without fee, provided this notice appears in all copies.
+    var TYPE_INFO = {
+        live: {
+            label: 'Performance',
+            glyph: 'm369.1 24.54-12.6 12.92c-9.2 14.71-9.7 34.33-7.6 53.05-2.9-.39-5.9-.46-8.9-.2-16.1 1.38-28.4 11.59-27.4 22.89 1 11.2 14.8 19.2 30.9 17.8 8.8-.7 17-4.2 22.1-9.5 1.7 10.8 15.2 18.2 30.7 16.9 16.1-1.4 28.4-11.6 27.4-22.9-.2-2.3-.9-4.5-2.1-6.5-3.4-19.63-4.2-38.02 4.8-57.07-18.6-5.91-44-16.31-57.3-27.39zm2.4 24.77c10.1 6.59 21.3 11.42 32 14.24-2.6 11.7-2.6 23.19-1.6 34.32-3-.42-6-.5-9.1-.24-8.8.77-16.9 4.27-22 9.57-.3-2-1.1-3.9-2.2-5.7-3.1-17.98-3.9-34.87 2.9-52.19zM111.4 63.88c-13.92 5.83-36.33 8.22-53.82 3.71l-4.5 17.43c2.08 18.88 10 35.28 19.99 49.68a20.44 29.25 55.36 0 0-8.08 4.4 20.44 29.25 55.36 0 0-12.45 33.4 20.44 29.25 55.36 0 0 35.69.2 20.44 29.25 55.36 0 0 12.47-33.4 20.44 29.25 55.36 0 0-5.4-4.7c-11.6-14-20.7-28.3-23.28-46.69 16.57.96 33.18-1.91 46.38-7.43l-7-16.6zM151 167v48h16v-32h178v32h16v-48H151zM25 233v238h462V233H25zm39 14h64v18H64v-18zm112 0h160v18H176v-18zm208 0h64v18h-64v-18zM48 279h416v18H48v-18zm64 32c40.2 0 73 32.8 73 73s-32.8 73-73 73c-40.21 0-73-32.8-73-73s32.79-73 73-73zm87 0h114v82H199v-82zm201 0c40.2 0 73 32.8 73 73s-32.8 73-73 73-73-32.8-73-73 32.8-73 73-73zm-288 18c-30.48 0-55 24.5-55 55s24.52 55 55 55c30.5 0 55-24.5 55-55s-24.5-55-55-55zm105 0v46h78v-46h-78zm183 0c-30.5 0-55 24.5-55 55s24.5 55 55 55 55-24.5 55-55-24.5-55-55-55zm-288 30c13.7 0 25 11.3 25 25s-11.3 25-25 25-25-11.3-25-25 11.3-25 25-25zm288 0c13.7 0 25 11.3 25 25s-11.3 25-25 25-25-11.3-25-25 11.3-25 25-25zm-288 18c-4 0-7 3-7 7s3 7 7 7 7-3 7-7-3-7-7-7zm288 0c-4 0-7 3-7 7s3 7 7 7 7-3 7-7-3-7-7-7zm-185 39h18v32h-18v-32zm32 0h18v32h-18v-32zm32 0h18v32h-18v-32z'
+        },
+        public: {
+            label: 'Session',
+            glyph: 'M120.998 40.998v37.943C136.22 89.471 146 109.278 146 131.001c0 13.71-3.901 26.65-10.598 36.985 3.465 1.35 7.106 2.85 10.15 4.172l122.352-22.783 5.918 54.842-111.748 23.219c-.862 16.261-2.45 32.262-5.289 51.566h336.217V40.998zM96 88.998c-16.595 0-32.002 17.747-32.002 42.004 0 24.257 15.407 42.002 32.002 42.002 16.595 0 32.002-17.745 32.002-42.002S112.595 88.998 96 88.998zm156.096 81.629-108.592 20.22c-14.24-5.602-4.956-3.035-21.469-8.517-7.476 5.469-16.33 8.672-26.035 8.672-8.6 0-16.53-2.523-23.428-6.9-8.59 3.564-17.655 8.09-25.736 12.654-12.992 7.338-23.722 13.211-27.838 16.033v130.213h20.004V232h17.996v263.002h30.004V326h17.996v169.002h26.004v-171.84l.154-.824c9.514-50.64 12.588-77.384 13.461-109.656l109.56-22.766zm-98.153 126.375c-.952 5.682-1.991 11.64-3.146 17.996H478v-17.996zM208 344.998c-16.595 0-32.002 17.747-32.002 42.004 0 18.198 8.67 32.73 20.01 38.855 3.599-1.662 7.482-2.706 11.68-2.851 4.633-.16 8.98.767 13.052 2.42 10.968-6.352 19.262-20.63 19.262-38.424 0-24.257-15.407-42.004-32.002-42.004zm112 0c-16.595 0-32.002 17.747-32.002 42.004 0 18.198 8.67 32.73 20.01 38.855 3.599-1.662 7.482-2.706 11.68-2.851 4.633-.16 8.98.767 13.052 2.42 10.968-6.352 19.262-20.63 19.262-38.424 0-24.257-15.407-42.004-32.002-42.004zm112 0c-16.595 0-32.002 17.747-32.002 42.004 0 18.198 8.67 32.73 20.01 38.855 3.599-1.662 7.482-2.706 11.68-2.851 4.633-.16 8.98.767 13.052 2.42 10.968-6.352 19.262-20.63 19.262-38.424 0-24.257-15.407-42.004-32.002-42.004zm-223.688 95.996c-3.844.133-8.907 2.93-14.3 8.785-5.394 5.855-10.696 14.25-15.125 22.76-4.226 8.12-7.609 16.16-10.06 22.463h85.339c-3.04-6.436-7.138-14.549-12.133-22.711-5.298-8.658-11.511-17.138-17.668-22.957-6.157-5.819-11.8-8.487-16.053-8.34zm112 0c-3.844.133-8.907 2.93-14.3 8.785-5.394 5.855-10.696 14.25-15.125 22.76-4.226 8.12-7.609 16.16-10.06 22.463h85.339c-3.04-6.436-7.138-14.549-12.133-22.711-5.298-8.658-11.511-17.138-17.668-22.957-6.157-5.819-11.8-8.487-16.052-8.34zm112 0c-3.844.133-8.907 2.93-14.3 8.785-5.394 5.855-10.696 14.25-15.125 22.76-4.226 8.12-7.609 16.16-10.06 22.463h85.339c-3.04-6.436-7.138-14.549-12.133-22.711-5.298-8.658-11.511-17.138-17.668-22.957-6.157-5.819-11.8-8.487-16.052-8.34z'
+        },
+        journal: {
+            label: 'Note',
+            nodes: [
+                { tag: 'path', d: 'M2 6h4' },
+                { tag: 'path', d: 'M2 10h4' },
+                { tag: 'path', d: 'M2 14h4' },
+                { tag: 'path', d: 'M2 18h4' },
+                { tag: 'rect', width: '16', height: '20', x: '4', y: '2', rx: '2' },
+                { tag: 'path', d: 'M16 2v20' }
+            ]
+        },
+        software: {
+            label: 'App',
+            glyph: 'M73 25v238h366V25H283v16h140v192H89V41h140V25H73zm174 0v16h18V25h-18zM107 59v156h298V59H107zM71.03 281l-43.5 174H484.5L441 281h-29.9l20 96h-99.6l16 64H163.8l20-64H80.93l19.97-96H71.03zm48.27 0-2.9 14H147l2.3-14h-30zm48.4 0-2.3 14h30.7l1.7-14h-30.1zm48.2 0-1.7 14H247v-14h-31.1zm49.1 0v14h32.8l-1.7-14H265zm49.2 0 1.7 14h30.7l-2.3-14h-30.1zm48.5 0 2.3 14h30.6l-2.9-14h-30zm-250 32-3 14h31.9l2.4-14h-31.3zm49.7 0-2.4 14h32.1l1.7-14h-31.4zm49.5 0-1.7 14H247v-14h-35.1zm53.1 0v14h36.8l-1.7-14H265zm53.2 0 1.7 14H352l-2.4-14h-31.4zm49.8 0 2.4 14h31.9l-3-14H368zm-262 32-2.9 14h33.2l2.3-14H106zm51 0-2.3 14h33.4l1.7-14H157zm50.9 0-1.7 14H247v-14h-39.1zm57.1 0v14h40.8l-1.7-14H265zm57.2 0 1.7 14h33.4l-2.3-14h-32.8zm51.2 0 2.3 14h33.2l-2.9-14h-32.6zm-170.8 32-14.4 46h136.3L313 377H202.6zM28 473v18h456v-18H28z'
+        },
+        release: {
+            label: 'Release',
+            glyph: 'M32.033 96S16 96 16 112.22V384c0 16 15.783 16 15.783 16h54.94l.547-2.184L104.973 327h302.054l17.703 70.816.547 2.184h53.01S496 400 496 385.23V112c0-16-16-16-16-16H32.033zM87 135h338v18H87v-18zm0 48h338v114H87V183zm18 18v78h132.795c5.88-11.722 9.205-24.957 9.205-39s-3.326-27.278-9.205-39H105zm152.465 0A104.329 104.329 0 0 1 265 240c0 13.777-2.686 26.934-7.535 39h32.89A72.419 72.419 0 0 1 279 240c0-14.33 4.17-27.708 11.354-39h-32.89zm55.676 0c-9.98 9.945-16.14 23.723-16.14 39 0 15.277 6.16 29.055 16.14 39h77.72c9.98-9.945 16.14-23.723 16.14-39 0-15.277-6.16-29.055-16.14-39h-77.72zm-143.677 8.432a32 32 0 0 1 12.06 6.94l-5.12 2.956c5.044 4.037 8.61 9.857 9.693 16.465l5.06-2.922A32 32 0 0 1 192 240a32 32 0 0 1-.787 6.94l-5.072-2.928c-1.016 6.624-4.525 12.476-9.525 16.56l5.065 2.924a32 32 0 0 1-12.217 7.04v-5.778a26.138 26.138 0 0 1-9.553 1.812c-3.36 0-6.58-.648-9.553-1.812v5.744a32 32 0 0 1-12.11-7.086l4.944-2.853c-4.995-4.088-8.5-9.943-9.512-16.57l-4.903 2.83A32 32 0 0 1 128 240a32 32 0 0 1 .81-7.027l4.91 2.834c1.08-6.608 4.643-12.43 9.684-16.47l-5.013-2.894a32 32 0 0 1 11.967-6.918v5.786a26.142 26.142 0 0 1 9.553-1.812c3.36 0 6.58.648 9.553 1.813v-5.878zm192.11.04a32 32 0 0 1 11.984 6.93l-5.047 2.914c5.044 4.038 8.61 9.857 9.693 16.465l4.963-2.862A32 32 0 0 1 384 240a32 32 0 0 1-.77 6.877l-4.98-2.875c-1.016 6.624-4.526 12.476-9.525 16.56l5.004 2.89a32 32 0 0 1-12.158 7.046v-5.75a26.138 26.138 0 0 1-9.554 1.81c-3.36 0-6.58-.646-9.553-1.81v5.793a32 32 0 0 1-12.184-7.093l5.02-2.896c-4.998-4.087-8.503-9.942-9.515-16.568l-5 2.887A32 32 0 0 1 320 240a32 32 0 0 1 .826-7.092l5.002 2.89c1.08-6.61 4.643-12.43 9.684-16.47l-5.073-2.93a32 32 0 0 1 12.025-6.908v5.81a26.097 26.097 0 0 1 19.107-.002v-5.825zM119.026 345l-13.75 55h301.446l-13.75-55H119.027zM48 352a16 16 0 0 1 16 16 16 16 0 0 1-16 16 16 16 0 0 1-16-16 16 16 0 0 1 16-16zm416 0a16 16 0 0 1 16 16 16 16 0 0 1-16 16 16 16 0 0 1-16-16 16 16 0 0 1 16-16zm-304 7h48v18h-48v-18zm144 0h48v18h-48v-18z'
+        }
+    };
+
+    function iconSvg(info) {
+        var ns = 'http://www.w3.org/2000/svg';
+        var svg = document.createElementNS(ns, 'svg');
+        svg.setAttribute('aria-hidden', 'true');
+        svg.setAttribute('class', 'tl-icon');
+        if (info.glyph) {
+            svg.setAttribute('viewBox', '0 0 512 512');
+            var glyph = document.createElementNS(ns, 'path');
+            glyph.setAttribute('fill', 'currentColor');
+            glyph.setAttribute('d', info.glyph);
+            svg.appendChild(glyph);
+            return svg;
+        }
+        svg.setAttribute('viewBox', '0 0 24 24');
+        svg.setAttribute('fill', 'none');
+        svg.setAttribute('stroke', 'currentColor');
+        svg.setAttribute('stroke-width', '2');
+        svg.setAttribute('stroke-linecap', 'round');
+        svg.setAttribute('stroke-linejoin', 'round');
+        info.nodes.forEach(function (node) {
+            var shape = document.createElementNS(ns, node.tag);
+            Object.keys(node).forEach(function (key) {
+                if (key !== 'tag') shape.setAttribute(key, node[key]);
+            });
+            svg.appendChild(shape);
+        });
+        return svg;
+    }
+
+    function typeInfo(type) {
+        return TYPE_INFO[type] || TYPE_INFO.live;
+    }
+
+    // digital-trace, Spencer Dub — https://game-icons.net/1x1/spencerdub/digital-trace.html
+    var PLACE_GLYPH = 'M256 23C127.425 23 23 127.425 23 256s104.425 233 233 233 233-104.425 233-233S384.575 23 256 23zm0 18c26.584 0 52.025 4.824 75.516 13.623l-19.405 51.746a160 160 0 0 1 56.955 36.565l39.002-39.002a215.033 215.033 0 0 1 45.006 65.957l-43.601 40.707 58.69 10.45a215.91 215.91 0 0 1 1.87 14.57l-51.709 4.923-8.851-29.943-9.073-30.688-45.064 42.072C341.166 180.736 301.982 151 256 151c-14.248 0-27.841 2.86-40.242 8.027l1.732-61.66-29.011 13.5-29.012 13.502 48.3 38.393C174.078 180.266 151 215.494 151 256c0 44.296 27.593 82.287 66.488 97.682l-44.047 43.064 30.243 10.461 30.242 10.461-8.024-61.074A104.612 104.612 0 0 0 256 361c57.883 0 105-47.117 105-105a104.8 104.8 0 0 0-3.146-25.523l57.892 10.308-.613.059A160 160 0 0 1 416 256a160 160 0 0 1-96.7 146.744l21.887 50.738C315.072 464.747 286.276 471 256 471a216.252 216.252 0 0 1-44.543-4.623l-7.773-59.17-42.688 41.736a215.464 215.464 0 0 1-63.52-47.63l40.7-37.31A160 160 0 0 1 96 256a160 160 0 0 1 46.934-113.066l-39.002-39.002a215.648 215.648 0 0 1 37.867-30.166l46.68 37.101 1.673-59.603C210.902 44.607 233.024 41 256 41zm0 128c30.33 0 56.962 15.413 72.525 38.854l-41.802 39.027 56.265 10.02C342.507 304.637 303.855 343 256 343c-1.013 0-2.02-.025-3.023-.059l-7.45-56.7-40.93 40.015C182.998 310.447 169 284.903 169 256c0-25.708 11.075-48.755 28.723-64.662l44.76 35.58 1.605-57.107A88.273 88.273 0 0 1 256 169zm0 55a32 32 0 0 0-32 32 32 32 0 0 0 32 32 32 32 0 0 0 32-32 32 32 0 0 0-32-32z';
+
+    function placeIcon() {
+        var svg = iconSvg({ glyph: PLACE_GLYPH });
+        svg.classList.add('tl-icon--place');
+        return svg;
+    }
+
+    function kindText(ev) {
+        var label = typeInfo(ev.type).label;
+        if (!ev.kind) return label;
+        if (ev.kind.toLowerCase().indexOf(label.toLowerCase()) !== -1) return ev.kind;
+        return label + ' · ' + ev.kind;
+    }
+
+    // Kind line under the type name. Skipped when it only repeats that name.
+    function specificKind(ev) {
+        if (!ev.kind) return '';
+        if (ev.kind.toLowerCase() === typeInfo(ev.type).label.toLowerCase()) return '';
+        return ev.kind;
+    }
+
+    // logo + logoFor: the logo stands in for that word of the title.
+    // logo alone: it is appended after the title.
+    function appendLogoTitle(parent, ev, logoClass) {
+        var logoAt = ev.logo && ev.logoFor ? ev.title.indexOf(ev.logoFor) : -1;
+        if (logoAt >= 0) {
+            parent.appendChild(document.createTextNode(ev.title.slice(0, logoAt)));
+            var inline = el('img', logoClass);
+            inline.src = ev.logo;
+            inline.alt = ev.logoFor;
+            parent.appendChild(inline);
+            parent.appendChild(document.createTextNode(ev.title.slice(logoAt + ev.logoFor.length)));
+            return;
+        }
+        parent.appendChild(document.createTextNode(ev.title));
+        if (ev.logo) {
+            var badge = el('img', logoClass);
+            badge.src = ev.logo;
+            badge.alt = '';
+            parent.appendChild(badge);
+        }
+    }
+
     /* ---------------- Homepage universe ---------------- */
 
     // Horizontal distance between two neighbours =
@@ -131,6 +246,7 @@
         var maxY = 100;
         if (imagesOf(ev).length) maxY = 54;
         if (importanceOf(ev) === 'major') maxY = 44;
+        if (ev.featured) maxY = 44;
         return maxY;
     }
 
@@ -139,6 +255,7 @@
         var node = el(isLink ? 'a' : 'div', 'tl-node tl-node--' + (ev._coming ? 'live' : ev.type));
         var imp = importanceOf(ev);
         if (imp !== 'normal') node.classList.add('tl-node--' + imp);
+        if (ev.featured) node.classList.add('tl-node--featured');
         // Same tab, so the browser's back button returns to the timeline.
         if (isLink) node.href = ev.link;
         if (isUpcoming(ev) && !ev._coming) {
@@ -152,6 +269,18 @@
         var marker = el('span', 'tl-node__marker');
         marker.setAttribute('aria-hidden', 'true');
         marker.appendChild(el('span', 'tl-node__cross', '+'));
+        if (ev.featured && ev.logo) {
+            var mark = el('img', 'tl-node__mark');
+            mark.src = ev.logo;
+            mark.alt = ev.logoFor || '';
+            marker.appendChild(mark);
+            marker.classList.add('tl-node__marker--logo');
+        } else if (!ev._coming) {
+            var markIcon = iconSvg(typeInfo(ev.type));
+            markIcon.classList.add('tl-node__markicon');
+            marker.appendChild(markIcon);
+            marker.classList.add('tl-node__marker--icon');
+        }
         node.appendChild(marker);
 
         if (ev._coming && ev._upnext && ev._upnext.length) {
@@ -170,6 +299,7 @@
                 ev._upnext.forEach(function (item, i) {
                     var row = el('li', 'tl-node__upnext-item tl-node__upnext-item--n' + i +
                         (item.tentative ? ' tl-node__upnext-item--tentative' : '') +
+                        (item.featured ? ' tl-node__upnext-item--featured' : '') +
                         (item.link ? ' tl-node__upnext-item--link' : ''));
                     var coords = el(item.link ? 'a' : 'span', 'tl-node__upnext-coords');
                     if (item.link) coords.href = item.link;
@@ -183,10 +313,7 @@
                         coords.appendChild(thumb);
                     }
                     var text = el('span', 'tl-node__upnext-text');
-                    coords.appendChild(text);
-                    var line = el('span', 'tl-node__upnext-line', upnextDate(item) + ' - ');
-                    // logo + logoFor: the logo stands in for that word of the title;
-                    // logo alone: it is appended after the line as a badge.
+                    var line = el('span', 'tl-node__upnext-line');
                     var logoAt = item.logo && item.logoFor ? item.title.indexOf(item.logoFor) : -1;
                     var badge = null;
                     if (item.logo) {
@@ -201,28 +328,37 @@
                         line.appendChild(document.createTextNode(item.title.slice(logoAt + item.logoFor.length)));
                     } else {
                         line.appendChild(document.createTextNode(item.title));
+                        if (badge) line.appendChild(badge);
                     }
+                    if (item.tentative) line.appendChild(el('span', 'tl-node__upnext-hope', ' [tbc]'));
                     text.appendChild(line);
-                    if (item.tentative) {
-                        line.appendChild(document.createTextNode(' '));
-                        line.appendChild(el('span', 'tl-node__upnext-hope', '[tbc]'));
+                    var meta = el('span', 'tl-node__upnext-meta');
+                    meta.appendChild(document.createTextNode(upnextDate(item)));
+                    var kind = specificKind(item);
+                    if (kind && item.title.toLowerCase().indexOf(kind.toLowerCase()) === -1) {
+                        meta.appendChild(document.createTextNode(' · ' + kind));
                     }
-                    if (badge && logoAt < 0) line.appendChild(badge);
-                    var metaParts = [];
-                    if (item.kind) metaParts.push(item.kind);
-                    if (item.city) metaParts.push(item.city);
-                    if (metaParts.length) {
-                        text.appendChild(el('span', 'tl-node__upnext-meta', metaParts.join(' - ')));
+                    if (item.city) {
+                        meta.appendChild(document.createTextNode(' · '));
+                        meta.appendChild(placeIcon());
+                        meta.appendChild(document.createTextNode(item.city));
                     }
+                    text.appendChild(meta);
+                    coords.appendChild(text);
                     row.appendChild(coords);
                     list.appendChild(row);
                 });
                 node.appendChild(list);
             }
-        } else {
-            var label = universeDate(ev) + (ev.city ? ' · ' + ev.city : '');
-            node.appendChild(el('span', 'tl-node__label', label));
+        } else if (ev.featured) {
+            node.appendChild(el('span', 'tl-node__label tl-node__label--target', universeDate(ev)));
+            if (ev.city) node.appendChild(el('span', 'tl-node__sublabel', ev.city));
             node.appendChild(el('span', 'tl-node__title', ev.title));
+        } else {
+            node.appendChild(el('span', 'tl-node__label', universeDate(ev) + (ev.city ? ' · ' + ev.city : '')));
+            var title = el('span', 'tl-node__title');
+            appendLogoTitle(title, ev, 'tl-node__logo');
+            node.appendChild(title);
         }
 
         var imgs = imagesOf(ev);
@@ -487,12 +623,19 @@
                 img.alt = ev.logo ? (ev.logoFor || '') : '';
                 card.appendChild(img);
             }
+            var kick = el('span', 'tl-focus__kind');
+            kick.appendChild(iconSvg(typeInfo(ev.type)));
+            kick.appendChild(document.createTextNode(typeInfo(ev.type).label));
+            card.appendChild(kick);
             card.appendChild(el('span', 'tl-focus__date', longDate(ev)));
             card.appendChild(el('span', 'tl-focus__title', ev.title));
             // Skip the venue when the city line already names it ('DOKA, Amsterdam' / 'KB, Den Haag').
             var place = ev.city ? ev.city.split(',')[0].trim() : '';
             var venueShown = ev.venue && !(place && (ev.venue.indexOf(place) === 0 || place.indexOf(ev.venue) === 0));
-            var meta = [ev.kind, venueShown ? ev.venue : null, ev.city].filter(Boolean).join(' · ');
+            function namedIn(part) {
+                return !!(part && ev.title && ev.title.toLowerCase().indexOf(part.toLowerCase()) !== -1);
+            }
+            var meta = [namedIn(ev.kind) ? null : ev.kind, venueShown && !namedIn(ev.venue) ? ev.venue : null, ev.city].filter(Boolean).join(' · ');
             if (meta) card.appendChild(el('span', 'tl-focus__meta', meta));
             var desc = ev.tentative ? 'To be confirmed — more details soon.' : ev.description;
             if (desc) card.appendChild(el('span', 'tl-focus__desc', desc));
@@ -648,11 +791,139 @@
         };
     }
 
+    function externalLink(node, href) {
+        node.href = href;
+        if (/^https?:/.test(href)) {
+            node.target = '_blank';
+            node.rel = 'noopener noreferrer';
+        }
+    }
+
+    // bannerText: a string, or strings mixed with { text, href } links.
+    function appendBannerText(parent, parts) {
+        if (!parts) return;
+        if (typeof parts === 'string') {
+            parent.appendChild(document.createTextNode(parts));
+            return;
+        }
+        parts.forEach(function (part) {
+            if (typeof part === 'string') {
+                parent.appendChild(document.createTextNode(part));
+                return;
+            }
+            var a = el('a', null, part.text);
+            externalLink(a, part.href);
+            parent.appendChild(a);
+        });
+    }
+
+    // Landing highlight. One event with banner: true — a thin marquee strip
+    // along the bottom. Fades with the title as the timeline scrolls.
+    function buildBannerSegment(ev, clone) {
+        var segment = el('div', 'universe-banner__segment');
+        if (clone) segment.setAttribute('aria-hidden', 'true');
+        var bannerLabel = ev.bannerTitle || ev.title;
+        var shot = ev.type === 'software' ? imagesOf(ev)[0] : null;
+        var media = shot || ev.logo || imagesOf(ev)[0];
+
+        function mute(node) {
+            if (!clone || !node) return node;
+            if (node.tagName === 'A') node.setAttribute('tabindex', '-1');
+            return node;
+        }
+
+        if (media && ev.link) {
+            var logoLink = mute(el('a', 'universe-banner__hit'));
+            logoLink.setAttribute('aria-label', bannerLabel);
+            externalLink(logoLink, ev.link);
+            var img = el('img', 'universe-banner__media' + (media === ev.logo ? ' universe-banner__media--logo' : ''));
+            img.src = media;
+            img.alt = '';
+            logoLink.appendChild(img);
+            segment.appendChild(logoLink);
+        } else if (media) {
+            var bare = el('img', 'universe-banner__media' + (media === ev.logo ? ' universe-banner__media--logo' : ''));
+            bare.src = media;
+            bare.alt = '';
+            segment.appendChild(bare);
+        }
+
+        var title = el('span', 'universe-banner__title', bannerLabel);
+        if (ev.link) {
+            var titleLink = mute(el('a', 'universe-banner__event'));
+            externalLink(titleLink, ev.link);
+            titleLink.appendChild(title);
+            segment.appendChild(titleLink);
+        } else {
+            segment.appendChild(title);
+        }
+
+        var copy = ev.bannerText;
+        if (copy == null && !ev.bannerTitle && !ev.bannerCta) copy = ev.description;
+        if (copy) {
+            var text = el('span', 'universe-banner__text');
+            appendBannerText(text, copy);
+            if (clone) {
+                Array.prototype.forEach.call(text.querySelectorAll('a'), function (a) {
+                    a.setAttribute('tabindex', '-1');
+                });
+            }
+            segment.appendChild(el('span', 'universe-banner__sep', '·'));
+            segment.appendChild(text);
+        }
+
+        if (ev.bannerCta && ev.bannerCta.href && ev.bannerCta.text) {
+            segment.appendChild(el('span', 'universe-banner__sep', '·'));
+            var cta = mute(el('a', 'universe-banner__cta'));
+            externalLink(cta, ev.bannerCta.href);
+            var ctaIcon = el('img', 'universe-banner__cta-icon');
+            ctaIcon.src = '/assets/soundcloud-logo.png';
+            ctaIcon.alt = '';
+            cta.appendChild(ctaIcon);
+            cta.appendChild(document.createTextNode(ev.bannerCta.text));
+            segment.appendChild(cta);
+        }
+
+        if (ev.bannerCredit) {
+            segment.appendChild(el('span', 'universe-banner__sep', '·'));
+            var credit = el('span', 'universe-banner__credit');
+            appendBannerText(credit, ev.bannerCredit);
+            if (clone) {
+                Array.prototype.forEach.call(credit.querySelectorAll('a'), function (a) {
+                    a.setAttribute('tabindex', '-1');
+                });
+            }
+            segment.appendChild(credit);
+        }
+
+        segment.appendChild(el('span', 'universe-banner__gap'));
+        return segment;
+    }
+
+    function buildBanner(ev) {
+        var universe = document.getElementById('timeline');
+        if (!universe) return;
+        var banner = el('aside', 'universe-banner');
+        banner.id = 'universeBanner';
+        banner.setAttribute('aria-label', ev.bannerTitle || ev.title);
+        var viewport = el('div', 'universe-banner__viewport');
+        var track = el('div', 'universe-banner__track');
+        track.appendChild(buildBannerSegment(ev, false));
+        track.appendChild(buildBannerSegment(ev, true));
+        viewport.appendChild(track);
+        banner.appendChild(viewport);
+        universe.appendChild(banner);
+    }
+
     function initUniverse() {
         var strip = document.getElementById('timelineStrip');
         var canvas = document.getElementById('tlCanvas');
         var svg = document.getElementById('tlSvg');
         if (!strip || !canvas || !svg) return;
+
+        var spotlight = null;
+        events.some(function (ev) { if (ev.banner) { spotlight = ev; return true; } });
+        if (spotlight) buildBanner(spotlight);
 
         var upnext = upcomingSorted().slice(0, 3);
         var head = upnext.length ? {
@@ -705,9 +976,16 @@
             var delta = Math.abs(strip.scrollLeft - homeScroll);
             var hint = document.getElementById('universeHint');
             var title = document.getElementById('universeTitle');
+            var banner = document.getElementById('universeBanner');
             if (hint) hint.style.opacity = virtualPos() > HINT_FADE ? '0' : '';
             // With an intro the title leaves during it (applyIntro); otherwise fade on scroll.
             if (title && !head) title.classList.toggle('is-hidden', delta > titleFadeAt);
+            if (banner && !head) {
+                var gone = delta > titleFadeAt;
+                banner.style.opacity = gone ? '0' : '';
+                banner.style.visibility = gone ? 'hidden' : '';
+                banner.style.pointerEvents = gone ? 'none' : '';
+            }
         }
 
         // Position the canvas and fade timeline nodes for the current intro progress.
@@ -733,6 +1011,7 @@
 
                 // Title drifts up and fades out over the first part of the intro.
                 var title = document.getElementById('universeTitle');
+                var banner = document.getElementById('universeBanner');
                 if (title) {
                     var t = introEase(Math.min(1, introP / TITLE_OUT));
                     titleLift = TITLE_LIFT * t;
@@ -741,6 +1020,12 @@
                     title.style.opacity = t ? (1 - t).toFixed(3) : '';
                     title.style.visibility = t >= 1 ? 'hidden' : '';
                 }
+                if (banner) {
+                    var bt = introEase(Math.min(1, introP / TITLE_OUT));
+                    banner.style.opacity = bt ? (1 - bt).toFixed(3) : '';
+                    banner.style.visibility = bt >= 1 ? 'hidden' : '';
+                    banner.style.pointerEvents = bt > 0.35 ? 'none' : '';
+                }
             }
             nodes.forEach(function (n, i) {
                 if (head && i === 0) return;
@@ -748,7 +1033,7 @@
                 n.style.opacity = o >= 1 ? '' : o.toFixed(3);
                 n.style.pointerEvents = o < 0.5 ? 'none' : '';
             });
-            var line = svg.firstChild;
+            var line = svg.querySelector('polyline');
             if (line && lineLen) {
                 line.style.strokeDasharray = e >= 1
                     ? ''
@@ -890,34 +1175,66 @@
             render();
         }
 
+        var lineHoles = [];
+
         function drawLines() {
             var stripRect = strip.getBoundingClientRect();
             svg.setAttribute('width', canvas.scrollWidth);
             svg.setAttribute('height', strip.clientHeight);
             svg.style.width = canvas.scrollWidth + 'px';
             markerBase = nodes.map(function (n, i) {
-                var r = n.querySelector('.tl-node__marker').getBoundingClientRect();
+                var marker = n.querySelector('.tl-node__marker');
+                var r = marker.getBoundingClientRect();
                 var off = nodeOffsets[i] || [0, 0];
                 // Canvas coordinates: undo the intro/overscroll shift and parallax drift.
+                // Fade radius uses the unscaled marker, so the line dissolves before the icon.
+                var size = marker.offsetWidth || r.width;
                 return [
                     r.left + r.width / 2 - stripRect.left + strip.scrollLeft - canvasShift - off[0],
-                    r.top + r.height / 2 - stripRect.top - off[1]
+                    r.top + r.height / 2 - stripRect.top - off[1],
+                    Math.max(22, size * 1.2)
                 ];
             });
-            svg.innerHTML = '<polyline fill="none" stroke="rgba(0,0,0,0.25)" stroke-width="1"/>';
+            var holes = markerBase.map(function () {
+                return '<circle fill="url(#tlLineHole)"/>';
+            }).join('');
+            svg.innerHTML =
+                '<defs>' +
+                    '<radialGradient id="tlLineHole" cx="50%" cy="50%" r="50%">' +
+                        '<stop offset="0" stop-color="#000"/>' +
+                        '<stop offset="0.34" stop-color="#000"/>' +
+                        '<stop offset="1" stop-color="#000" stop-opacity="0"/>' +
+                    '</radialGradient>' +
+                    '<mask id="tlLineMask" maskUnits="userSpaceOnUse">' +
+                        '<rect x="0" y="0" width="' + canvas.scrollWidth + '" height="' + strip.clientHeight + '" fill="#fff"/>' +
+                        holes +
+                    '</mask>' +
+                '</defs>' +
+                '<polyline fill="none" stroke="rgba(0,0,0,0.25)" stroke-width="1" mask="url(#tlLineMask)"/>';
+            lineHoles = svg.querySelectorAll('#tlLineMask circle');
+            for (var h = 0; h < lineHoles.length; h++) {
+                lineHoles[h].setAttribute('r', markerBase[h][2].toFixed(1));
+            }
             writeLine();
-            lineLen = svg.firstChild && svg.firstChild.getTotalLength
-                ? svg.firstChild.getTotalLength() * 1.2 : 0; // slack for parallax stretch
+            var line = svg.querySelector('polyline');
+            lineLen = line && line.getTotalLength ? line.getTotalLength() * 1.2 : 0; // slack for parallax stretch
         }
 
         // Line through each marker's resting point plus its current parallax drift.
+        // Each end fades out in the mask so the stroke never crosses the icon.
         function writeLine() {
-            var line = svg.firstChild;
+            var line = svg.querySelector('polyline');
             if (!line || !markerBase.length) return;
             line.setAttribute('points', markerBase.map(function (p, i) {
                 var off = nodeOffsets[i] || [0, 0];
                 return (p[0] + off[0]).toFixed(1) + ',' + (p[1] + off[1]).toFixed(1);
             }).join(' '));
+            for (var i = 0; i < lineHoles.length; i++) {
+                var p = markerBase[i];
+                var off = nodeOffsets[i] || [0, 0];
+                lineHoles[i].setAttribute('cx', (p[0] + off[0]).toFixed(1));
+                lineHoles[i].setAttribute('cy', (p[1] + off[1]).toFixed(1));
+            }
         }
 
         layout();
@@ -1191,7 +1508,8 @@
     /* ---------------- /music performance log ---------------- */
 
     function buildRow(ev, upcoming) {
-        var item = el('li', 'log-item' + (upcoming ? ' log-item--upcoming' : ''));
+        var item = el('li', 'log-item' + (upcoming ? ' log-item--upcoming' : '') +
+            (ev.featured ? ' log-item--featured' : ''));
 
         var metaParts = [logDate(ev)];
         if (ev.city) metaParts.push(ev.city);
@@ -1200,17 +1518,17 @@
         if (upcoming) item.appendChild(el('p', 'log-status', 'upcoming'));
 
         var title = el('h3', 'log-title');
+        var holder = title;
         if (ev.link) {
-            var a = el('a', null, ev.title);
-            a.href = ev.link;
+            holder = el('a');
+            holder.href = ev.link;
             if (/^https?:/.test(ev.link)) {
-                a.target = '_blank';
-                a.rel = 'noopener noreferrer';
+                holder.target = '_blank';
+                holder.rel = 'noopener noreferrer';
             }
-            title.appendChild(a);
-        } else {
-            title.textContent = ev.title;
+            title.appendChild(holder);
         }
+        appendLogoTitle(holder, ev, 'log-title__logo');
         item.appendChild(title);
 
         if (ev.description) {

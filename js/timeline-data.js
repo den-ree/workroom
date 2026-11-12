@@ -41,9 +41,23 @@
 //   logo         Optional. Organiser/festival logo (square image) shown as a small
 //                badge after the event line in the homepage "coming next" list,
 //                e.g. '/images/logos/ade.png'.
-//   logoFor      Optional, with logo. Word in the title the logo replaces on the
-//                homepage (e.g. 'ADE' → "21.10 - [logo] - Live Coding Sessions").
-//                /music keeps the plain-text title.
+//   logoFor      Optional, with logo. Word in the title the logo replaces
+//                (e.g. 'ADE' → "[logo] - Live Coding Sessions") on the homepage
+//                node and in coming next. /music shows the same logo in the title.
+//   featured     Optional. true = the main focus on the timeline. The logo sits in
+//                the marker and the date is centred on that target; the title
+//                stays the normal size. One event at a time.
+//   banner       Optional. true = the landing highlight (a show or an app).
+//                One event at a time. Fades away as the timeline scrolls.
+//   bannerTitle  Optional, with banner. Short title on the landing card only
+//                (timeline /music keep using `title`).
+//   bannerText   Optional, with banner. Copy under the title (the /music
+//                description stays in `description`). A string, or an array
+//                of strings and { text, href } links. The title links to `link`.
+//   bannerCta    Optional, with banner. { text, href } for a button under the
+//                copy (e.g. Follow on SoundCloud). Opens in a new tab.
+//   bannerCredit Optional, with banner. Small line under the CTA — a string,
+//                or strings mixed with { text, href } links.
 //   time         Optional. Start time 'HH:MM' (local to the venue). Makes the
 //                "+ Calendar" invite a timed event instead of all-day.
 //   endTime      Optional. End time 'HH:MM'; earlier than time = next day.
@@ -54,6 +68,30 @@
 //                'Ketelmakerij 4, Amsterdam'. Falls back to city.
 
 window.TIMELINE_EVENTS = [
+    {
+        type: 'live',
+        date: '2026-12-11',
+        title: 'ITERATIONS',
+        kind: 'A/V Performance',
+        city: 'Arnhem, NL',
+        venue: 'De Nieuwe Coehoorn',
+        tentative: true,
+        badges: ['livecoding', 'a/v'],
+    },
+    {
+        type: 'live',
+        date: '2026-11-13',
+        time: '20:00',
+        endTime: '01:00',
+        title: 'Algorave: Vondelbunker',
+        kind: 'Algorave',
+        city: 'Amsterdam, NL',
+        venue: 'Vondelbunker',
+        address: 'Vondelpark 8A, Amsterdam',
+        link: 'https://www.instagram.com/p/Dfjp6ZDoU2q/',
+        description: 'Handcrafted algorithms with Rik Mertens. Doors 19:30, free entry, cash only.',
+        badges: ['livecoding', 'algorave'],
+    },
     {
         type: 'live',
         date: '2026-11-06',
@@ -79,6 +117,7 @@ window.TIMELINE_EVENTS = [
     {
         type: 'live',
         date: '2026-10-21',
+        featured: true,
         title: 'ADE - Live Coding Sessions',
         kind: 'Algorave',
         city: 'DOKA, Amsterdam, NL',
@@ -86,7 +125,17 @@ window.TIMELINE_EVENTS = [
         link: 'https://www.amsterdam-dance-event.nl/en/artists-speakers/den-ree/2861432/',
         logo: '/images/logos/ade.png',
         logoFor: 'ADE',
-        description: 'Season-closing Algorave at Doka during ADE, with first-time guests including Den Ree.',
+        banner: true,
+        bannerTitle: 'ADE algorave dj set coming soon.',
+        bannerCta: {
+            text: 'Follow on SoundCloud',
+            href: 'https://soundcloud.com/den-ree',
+        },
+        bannerCredit: [
+            'recorded by ',
+            { text: 'Tapelet', href: 'https://apps.apple.com/app/tapelet-multitrack-recorder/id6762547842?mt=12' },
+        ],
+        description: 'Live coding set at Doka, closing the season during ADE.',
         badges: ['livecoding', 'algorave'],
     },
     {
@@ -179,7 +228,7 @@ window.TIMELINE_EVENTS = [
         images: ['/images/cars2-1.jpeg'],
     },
     {
-        type: 'public',
+        type: 'live',
         date: '2025-12-08',
         importance: 'minor',
         title: 'TOPLAP 48h Stream: From Scratch',
