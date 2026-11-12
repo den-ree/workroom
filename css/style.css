@@ -1586,7 +1586,7 @@ body.page-universe main {
     display: block;
     position: absolute;
     right: 1.5rem;
-    bottom: 2.85rem;
+    bottom: 0.85rem;
     font-family: 'Karrik', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-size: 0.85rem;
     font-weight: 700;
@@ -1626,7 +1626,7 @@ body.page-universe main {
 .universe-credit {
     position: absolute;
     left: 1.25rem;
-    bottom: 2.85rem;
+    bottom: 0.85rem;
     max-width: none;
     margin: 0;
     font-size: 0.5rem;
@@ -2233,66 +2233,50 @@ a.tl-node:hover .tl-node__marker {
 
 .universe-banner {
     position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    left: 1.25rem;
+    bottom: 2.15rem;
     z-index: 4;
-    height: 2.35rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    width: min(28rem, calc(100% - 8rem));
+    padding: 0.65rem 0.8rem 0.5rem;
+    text-decoration: none;
     color: #111;
-    background: linear-gradient(to bottom, rgba(244, 246, 250, 0.92) 0%, rgba(226, 231, 239, 0.96) 100%);
+    background: linear-gradient(to bottom, rgba(244, 246, 250, 0.94) 0%, rgba(226, 231, 239, 0.94) 100%);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
-    border-top: 1px solid rgba(40, 55, 90, 0.14);
-    overflow: hidden;
+    border: 1px solid rgba(40, 55, 90, 0.16);
+    border-radius: 14px;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        0 10px 28px rgba(20, 40, 90, 0.14);
 }
 
-.universe-banner__viewport {
-    height: 100%;
-    overflow: hidden;
-}
-
-.universe-banner__track {
+.universe-banner__main {
     display: flex;
-    width: max-content;
-    height: 100%;
-    animation: universe-banner-marquee 42s linear infinite;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    gap: 0.7rem;
+    min-width: 0;
 }
 
-.universe-banner:hover .universe-banner__track,
-.universe-banner:focus-within .universe-banner__track {
-    animation-play-state: paused;
-}
-
-@keyframes universe-banner-marquee {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-}
-
-.universe-banner__segment {
-    display: flex;
-    align-items: center;
-    gap: 0.65rem;
-    height: 100%;
-    padding: 0 1.25rem;
+.universe-banner__hit {
     flex: none;
-    white-space: nowrap;
-}
-
-.universe-banner__gap {
-    display: inline-block;
-    width: 3.5rem;
-    flex: none;
-}
-
-.universe-banner__sep {
-    color: #888;
-    font-weight: 700;
+    display: block;
+    line-height: 0;
 }
 
 .universe-banner__hit,
 .universe-banner__event {
     color: inherit;
     text-decoration: none;
+}
+
+.universe-banner__event {
+    display: block;
+    min-width: 0;
 }
 
 .universe-banner__hit:hover,
@@ -2304,30 +2288,40 @@ a.tl-node:hover .tl-node__marker {
 }
 
 .universe-banner__media {
-    flex: none;
-    width: 22px;
-    height: 22px;
+    display: block;
+    width: 55px;
+    height: 55px;
     object-fit: cover;
-    border-radius: 5px;
+    border-radius: 8px;
     background: #fff;
-    vertical-align: middle;
 }
 
 .universe-banner__media--logo {
     object-fit: contain;
-    padding: 2px;
+    padding: 4px;
+    border-radius: 10px;
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
 }
 
+.universe-banner__body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.35rem;
+    min-width: 0;
+    flex: 1;
+    min-height: 55px;
+}
+
 .universe-banner__title {
-    font-size: 0.84rem;
+    font-size: 0.88rem;
     font-weight: 700;
-    line-height: 1;
+    line-height: 1.2;
 }
 
 .universe-banner__text {
-    font-size: 0.8rem;
-    line-height: 1;
+    font-size: 0.78rem;
+    line-height: 1.3;
     color: #333;
 }
 
@@ -2342,16 +2336,18 @@ a.tl-node:hover .tl-node__marker {
 .universe-banner__cta {
     display: inline-flex;
     align-items: center;
+    flex: none;
+    width: fit-content;
     gap: 0.35rem;
-    padding: 0.22rem 0.55rem;
+    padding: 0.3rem 0.6rem;
     font-size: 0.74rem;
     font-weight: 700;
-    line-height: 1;
+    line-height: 1.2;
     color: #fff;
     text-decoration: none;
     white-space: nowrap;
     background: #111;
-    border-radius: 6px;
+    border-radius: 8px;
     transition: background 0.15s ease;
 }
 
@@ -2374,35 +2370,27 @@ a.tl-node:hover .tl-node__marker {
 }
 
 .universe-banner__credit {
-    font-size: 0.74rem;
-    line-height: 1;
-    color: #444;
+    display: block;
+    margin: 0;
+    padding-top: 0.4rem;
+    border-top: 1px solid rgba(40, 55, 90, 0.1);
+    font-size: 0.65rem;
+    line-height: 1.3;
+    color: #888;
+    text-align: left;
 }
 
-body.is-coming-open .universe-banner {
-    opacity: 0 !important;
-    visibility: hidden !important;
-    pointer-events: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .universe-banner__track {
-        animation: none;
-    }
+.universe-banner__credit a {
+    font-weight: 600;
+    color: #666;
 }
 
 @media (max-width: 768px) {
     .universe-banner {
-        height: 2.2rem;
-    }
-
-    .universe-banner__segment {
-        padding: 0 0.75rem;
-        gap: 0.5rem;
-    }
-
-    .universe-banner__title {
-        font-size: 0.78rem;
+        left: 0.75rem;
+        right: 0.75rem;
+        bottom: 2rem;
+        width: auto;
     }
 }
 
@@ -2695,7 +2683,7 @@ a.tl-node:hover .tl-node__media:nth-child(1),
 
     .universe-credit {
         left: 0.75rem;
-        bottom: 2.6rem;
+        bottom: 0.65rem;
         max-width: none;
         font-size: 0.45rem;
         white-space: nowrap;
@@ -2703,7 +2691,7 @@ a.tl-node:hover .tl-node__media:nth-child(1),
 
     .universe-hint {
         right: 0.75rem;
-        bottom: 2.6rem;
+        bottom: 0.65rem;
     }
 
     .tl-node {

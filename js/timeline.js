@@ -817,45 +817,50 @@
         });
     }
 
-    // Landing highlight. One event with banner: true — a thin marquee strip
-    // along the bottom. Fades with the title as the timeline scrolls.
-    function buildBannerSegment(ev, clone) {
-        var segment = el('div', 'universe-banner__segment');
-        if (clone) segment.setAttribute('aria-hidden', 'true');
+    // Landing highlight. One event with banner: true — a small popup card
+    // at the bottom. Stays visible with the font credit (does not fade on scroll).
+    function buildBanner(ev) {
+        var universe = document.getElementById('timeline');
+        if (!universe) return;
         var bannerLabel = ev.bannerTitle || ev.title;
         var shot = ev.type === 'software' ? imagesOf(ev)[0] : null;
         var media = shot || ev.logo || imagesOf(ev)[0];
+        var split = !!ev.link && !!(ev.bannerText || ev.bannerCta || ev.bannerCredit || ev.bannerTitle);
+        var banner = el(split || !ev.link ? 'aside' : 'a', 'universe-banner');
+        banner.id = 'universeBanner';
+        banner.setAttribute('aria-label', bannerLabel);
+        if (!split && ev.link) externalLink(banner, ev.link);
 
-        function mute(node) {
-            if (!clone || !node) return node;
-            if (node.tagName === 'A') node.setAttribute('tabindex', '-1');
-            return node;
-        }
-
-        if (media && ev.link) {
-            var logoLink = mute(el('a', 'universe-banner__hit'));
-            logoLink.setAttribute('aria-label', bannerLabel);
-            externalLink(logoLink, ev.link);
-            var img = el('img', 'universe-banner__media' + (media === ev.logo ? ' universe-banner__media--logo' : ''));
+        var img = null;
+        if (media) {
+            img = el('img', 'universe-banner__media' + (media === ev.logo ? ' universe-banner__media--logo' : ''));
             img.src = media;
             img.alt = '';
-            logoLink.appendChild(img);
-            segment.appendChild(logoLink);
-        } else if (media) {
-            var bare = el('img', 'universe-banner__media' + (media === ev.logo ? ' universe-banner__media--logo' : ''));
-            bare.src = media;
-            bare.alt = '';
-            segment.appendChild(bare);
         }
 
         var title = el('span', 'universe-banner__title', bannerLabel);
-        if (ev.link) {
-            var titleLink = mute(el('a', 'universe-banner__event'));
-            externalLink(titleLink, ev.link);
-            titleLink.appendChild(title);
-            segment.appendChild(titleLink);
+        var main = el('div', 'universe-banner__main');
+        var body = el('span', 'universe-banner__body');
+
+        if (split) {
+            if (img) {
+                var logoLink = el('a', 'universe-banner__hit');
+                logoLink.setAttribute('aria-label', bannerLabel);
+                externalLink(logoLink, ev.link);
+                logoLink.appendChild(img);
+                main.appendChild(logoLink);
+            }
+            if (ev.link) {
+                var titleLink = el('a', 'universe-banner__event');
+                externalLink(titleLink, ev.link);
+                titleLink.appendChild(title);
+                body.appendChild(titleLink);
+            } else {
+                body.appendChild(title);
+            }
         } else {
-            segment.appendChild(title);
+            if (img) main.appendChild(img);
+            body.appendChild(title);
         }
 
         var copy = ev.bannerText;
@@ -863,55 +868,29 @@
         if (copy) {
             var text = el('span', 'universe-banner__text');
             appendBannerText(text, copy);
-            if (clone) {
-                Array.prototype.forEach.call(text.querySelectorAll('a'), function (a) {
-                    a.setAttribute('tabindex', '-1');
-                });
-            }
-            segment.appendChild(el('span', 'universe-banner__sep', '·'));
-            segment.appendChild(text);
+            body.appendChild(text);
         }
 
         if (ev.bannerCta && ev.bannerCta.href && ev.bannerCta.text) {
-            segment.appendChild(el('span', 'universe-banner__sep', '·'));
-            var cta = mute(el('a', 'universe-banner__cta'));
+            var cta = el('a', 'universe-banner__cta');
             externalLink(cta, ev.bannerCta.href);
             var ctaIcon = el('img', 'universe-banner__cta-icon');
             ctaIcon.src = '/assets/soundcloud-logo.png';
             ctaIcon.alt = '';
             cta.appendChild(ctaIcon);
             cta.appendChild(document.createTextNode(ev.bannerCta.text));
-            segment.appendChild(cta);
+            body.appendChild(cta);
         }
+
+        main.appendChild(body);
+        banner.appendChild(main);
 
         if (ev.bannerCredit) {
-            segment.appendChild(el('span', 'universe-banner__sep', '·'));
             var credit = el('span', 'universe-banner__credit');
             appendBannerText(credit, ev.bannerCredit);
-            if (clone) {
-                Array.prototype.forEach.call(credit.querySelectorAll('a'), function (a) {
-                    a.setAttribute('tabindex', '-1');
-                });
-            }
-            segment.appendChild(credit);
+            banner.appendChild(credit);
         }
 
-        segment.appendChild(el('span', 'universe-banner__gap'));
-        return segment;
-    }
-
-    function buildBanner(ev) {
-        var universe = document.getElementById('timeline');
-        if (!universe) return;
-        var banner = el('aside', 'universe-banner');
-        banner.id = 'universeBanner';
-        banner.setAttribute('aria-label', ev.bannerTitle || ev.title);
-        var viewport = el('div', 'universe-banner__viewport');
-        var track = el('div', 'universe-banner__track');
-        track.appendChild(buildBannerSegment(ev, false));
-        track.appendChild(buildBannerSegment(ev, true));
-        viewport.appendChild(track);
-        banner.appendChild(viewport);
         universe.appendChild(banner);
     }
 
@@ -976,16 +955,10 @@
             var delta = Math.abs(strip.scrollLeft - homeScroll);
             var hint = document.getElementById('universeHint');
             var title = document.getElementById('universeTitle');
-            var banner = document.getElementById('universeBanner');
             if (hint) hint.style.opacity = virtualPos() > HINT_FADE ? '0' : '';
             // With an intro the title leaves during it (applyIntro); otherwise fade on scroll.
+            // Banner + font credit stay put.
             if (title && !head) title.classList.toggle('is-hidden', delta > titleFadeAt);
-            if (banner && !head) {
-                var gone = delta > titleFadeAt;
-                banner.style.opacity = gone ? '0' : '';
-                banner.style.visibility = gone ? 'hidden' : '';
-                banner.style.pointerEvents = gone ? 'none' : '';
-            }
         }
 
         // Position the canvas and fade timeline nodes for the current intro progress.
@@ -1010,8 +983,8 @@
                 }
 
                 // Title drifts up and fades out over the first part of the intro.
+                // Banner + font credit stay visible with the ticker.
                 var title = document.getElementById('universeTitle');
-                var banner = document.getElementById('universeBanner');
                 if (title) {
                     var t = introEase(Math.min(1, introP / TITLE_OUT));
                     titleLift = TITLE_LIFT * t;
@@ -1019,12 +992,6 @@
                     title.style.transform = t ? 'translate(-50%, calc(-50% - ' + titleLift.toFixed(1) + 'px))' : '';
                     title.style.opacity = t ? (1 - t).toFixed(3) : '';
                     title.style.visibility = t >= 1 ? 'hidden' : '';
-                }
-                if (banner) {
-                    var bt = introEase(Math.min(1, introP / TITLE_OUT));
-                    banner.style.opacity = bt ? (1 - bt).toFixed(3) : '';
-                    banner.style.visibility = bt >= 1 ? 'hidden' : '';
-                    banner.style.pointerEvents = bt > 0.35 ? 'none' : '';
                 }
             }
             nodes.forEach(function (n, i) {
